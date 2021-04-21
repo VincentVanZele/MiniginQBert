@@ -216,15 +216,31 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="..\3rdParty\imgui-1.81\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\imgui-1.81\imstb_truetype.h" />
     <ClInclude Include="ActorState.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="BaseCommand.h" />
     <ClInclude Include="BaseComponent.h" />
+    <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="ControllerButton.h" />
     <ClInclude Include="DieObserver.h" />
+    <ClInclude Include="EMath.h" />
+    <ClInclude Include="EMathUtilities.h" />
+    <ClInclude Include="EMatrix.h" />
+    <ClInclude Include="EMatrix2.h" />
+    <ClInclude Include="EMatrix3.h" />
+    <ClInclude Include="EMatrix4.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="EPoint.h" />
+    <ClInclude Include="EPoint2.h" />
+    <ClInclude Include="EPoint3.h" />
+    <ClInclude Include="EPoint4.h" />
+    <ClInclude Include="EVector.h" />
+    <ClInclude Include="EVector2.h" />
+    <ClInclude Include="EVector3.h" />
+    <ClInclude Include="EVector4.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -249,6 +265,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="SDL2Audio.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="targetver.h" />
@@ -256,6 +273,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="TextObject.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="WorldComponent.h" />
   </ItemGroup>
   <ItemGroup>
@@ -301,9 +319,11 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
+    <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="Commands.cpp" />
     <ClCompile Include="DieObserver.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -331,11 +351,13 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="ScoreObserver.cpp" />
     <ClCompile Include="SDL2Audio.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WorldComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
