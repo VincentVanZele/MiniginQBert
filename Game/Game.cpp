@@ -96,7 +96,7 @@ void dae::Game::SinglePlayer()
 	auto* const dieObs = new DieObserver();
 	auto* const scoreObs = new ScoreObserver();
 
-	auto* pPlayerComponent = new PlayerComponent(PlayerNumber::PlayerOne);
+	auto* pPlayerComponent = new PlayerComponent(PlayerIndex::PlayerOne);
 	pPlayerComponent->AddObserver(dieObs);
 	player->AddComponent(pPlayerComponent);
 
@@ -197,7 +197,7 @@ void dae::Game::Coop()
 	auto* const dieObs1 = new DieObserver();
 	auto* const scoreObs1 = new ScoreObserver();
 
-	auto* playerComp1 = new PlayerComponent(PlayerNumber::PlayerOne);
+	auto* playerComp1 = new PlayerComponent(PlayerIndex::PlayerOne);
 	playerComp1->AddObserver(dieObs1);
 	player1->AddComponent(playerComp1);
 
@@ -244,7 +244,7 @@ void dae::Game::Coop()
 	auto* const dieObs2 = new DieObserver();
 	auto* const scoreObs2 = new ScoreObserver();
 
-	auto* playerComp2 = new PlayerComponent(PlayerNumber::PlayerTwo);
+	auto* playerComp2 = new PlayerComponent(PlayerIndex::PlayerTwo);
 	playerComp2->AddObserver(dieObs2);
 	player2->AddComponent(playerComp2);
 

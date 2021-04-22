@@ -3,11 +3,13 @@
 namespace dae
 {
 	class GameObject;
+	class SpriteComponent;
+	class Player;
 	
 	class ActorState
 	{
 	public:
-		ActorState(dae::GameObject* pGameObject)
+		ActorState(GameObject* pGameObject)
 		: m_pGameObject{ pGameObject }
 		{};
 		virtual ~ActorState()
@@ -34,8 +36,28 @@ namespace dae
 		{
 			m_pGameObject = gameObject;
 		}
+
+		SpriteComponent* GetSpriteComponent() const
+		{
+			return m_pSpriteComp;
+		}
+		void SetSpriteComponent(SpriteComponent* spriteComp)
+		{
+			m_pSpriteComp = spriteComp;
+		}
+
+		Player* GetPlayer() const
+		{
+			return m_pPlayer;
+		}
+		void SetPlayer(Player* player)
+		{
+			m_pPlayer = player;
+		}
 	
 	protected:
 		GameObject* m_pGameObject = nullptr;
+		Player* m_pPlayer = nullptr;
+		SpriteComponent* m_pSpriteComp = nullptr;
 	};
 }

@@ -2,7 +2,7 @@
 #include "BaseComponent.h"
 #include "Subject.h"
 
-enum class PlayerNumber;
+enum class PlayerIndex;
 
 namespace dae
 {
@@ -12,7 +12,7 @@ namespace dae
 	class PlayerComponent : public BaseComponent
 	{
 	public:
-		PlayerComponent(PlayerNumber player);
+		PlayerComponent(PlayerIndex player);
 		~PlayerComponent() override;
 		
 		PlayerComponent(const PlayerComponent& other) = delete;
@@ -60,7 +60,7 @@ namespace dae
 		bool m_hasDied = false;
 	
 	private:
-		PlayerNumber m_PlayerNumber;
+		PlayerIndex m_PlayerNumber;
 		int m_ControllerId{};
 
 		Subject* m_pSubject = nullptr;

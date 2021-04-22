@@ -12,8 +12,8 @@ namespace dae
 	class ColliderComponent : public dae::BaseComponent
 	{
 	public:
-		ColliderComponent(std::vector<std::weak_ptr<GameObject>>* pDynamicGameObjects, SDL_Rect rect, bool isStatic = true);
-		~ColliderComponent() override;
+		ColliderComponent(std::vector<std::weak_ptr<GameObject>>* pGo, SDL_Rect rect);
+		~ColliderComponent() override = default;
 		
 		ColliderComponent(const ColliderComponent& other) = delete;
 		ColliderComponent(ColliderComponent&& other) noexcept = delete;
@@ -24,28 +24,40 @@ namespace dae
 		void Update(float deltaTime) override;
 		void Render() override;
 
-		void UpdatePosition(int x, int y) { m_Rect.x = x; m_Rect.y = y; }
+		void UpdatePosition(int x, int y)
+		{
+			m_Rect.x = x; m_Rect.y = y;
+		}
+
+		Float4 GetRect() const
+		{
+			return { (float)m_Rect.x, (float)(m_Rect.y + m_Rect.h), (float)m_Rect.w, (float)m_Rect.h };
+		}
+
+		void SetSDLRect(SDL_Rect rect)
+		{
+			m_Rect = rect;
+		}
+		SDL_Rect GetSDLRect() const
+		{
+			return m_Rect;
+		}
 		
-		SDL_Rect GetSDLRect() const { return m_Rect; }
-		Float4 GetDAERect() const { return Float4((float)m_Rect.x, (float)(m_Rect.y + m_Rect.h), (float)m_Rect.w, (float)m_Rect.h); }
-		std::vector<Float2> GetDAERectCornerPoints() const;
-		
-		bool IsOverlapping() { return m_IsOverlapping; }
-		std::vector<std::weak_ptr<GameObject>> GetOverlappingGameObjects() { return m_pWeakOverlappingGameObjects; }
+		bool IsOverlapping() const
+		{
+			return m_IsOverlapping;
+		}
 	
 	private:
 		SDL_Rect m_Rect{};
 		
 		bool m_IsOverlapping = false;
-		bool m_IsStatic = true;
 		
-		const float m_Gravity = 9.81f;
 		const float m_MinDistance = 25;
 		
 		Elite::FVector2 m_Center{};
 		
-		std::vector<std::weak_ptr<GameObject>>* m_pDynamicGameObjects;
-		std::vector<std::weak_ptr<GameObject>> m_pWeakOverlappingGameObjects{};
+		std::vector<std::weak_ptr<GameObject>>* m_pColliderGameObjects;
 	};
 
 }

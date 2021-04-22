@@ -17,8 +17,17 @@ enum class Event
 	TileChanged
 };
 
-enum class PlayerNumber
+enum class PlayerIndex
 {
 	PlayerOne,
 	PlayerTwo
+};
+
+enum class Input
+{
+	Default,
+	Up,
+	Down,
+	Left,
+	Right
 };

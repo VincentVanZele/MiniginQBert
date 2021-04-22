@@ -6,7 +6,7 @@
 #include "InputManager.h"
 #include "WorldComponent.h"
 
-dae::PlayerComponent::PlayerComponent(PlayerNumber player)
+dae::PlayerComponent::PlayerComponent(PlayerIndex player)
 	: m_PlayerNumber{ player }
 {
 	m_pSubject = new Subject();
@@ -26,14 +26,14 @@ void dae::PlayerComponent::Initialize()
 {
 	switch(m_PlayerNumber)
 	{
-	case PlayerNumber::PlayerOne:
+	case PlayerIndex::PlayerOne:
 		// 0 -> first controller
 		if (ServiceLocator::GetInputManager()->GetInstance().IsControllerConnected(0))
 		{
 			m_ControllerId = 0;
 			break;
 		}
-	case PlayerNumber::PlayerTwo:
+	case PlayerIndex::PlayerTwo:
 		// 1 -> second controller  
 		if (ServiceLocator::GetInputManager()->GetInstance().IsControllerConnected(1))
 		{
