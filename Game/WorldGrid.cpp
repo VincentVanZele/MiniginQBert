@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "WorldGrid.h"
 #include "GridTile.h"
+#include "GameObject.h"
 
 #include "EMath.h"
 #include "Utils.h"
 #include "Enums.h"
 
-dae::WorldGrid::WorldGrid(std::vector<std::weak_ptr<GameObject>> gridTiles)
-	: m_pGridTiles{ std::move(gridTiles) }
+dae::WorldGrid::WorldGrid(int width, Float2 pos)
+	: m_width(width)
+	, m_gridPosition(pos)
 {
 	m_pSubject = new Subject();
 }
@@ -22,6 +24,92 @@ dae::WorldGrid::~WorldGrid()
 	}
 }
 
+void dae::WorldGrid::Initialize()
+{
+	Float2 tempPos = m_gridPosition;
+	int leftChild{}, rightChild{};
+	int offset{ 1 }, endOfLine{ 1 }, counter{ 0 };
+
+	// Rows
+	for (int i = m_width; i != 0; i--)
+	{
+		// Reset tile position 
+		tempPos = m_gridPosition;
+
+		// Cols
+		for (int j = 0; j < i; j++)
+		{
+			auto *newTile = new GameObject();
+			newTile->AddComponent(new GridTile(tempPos));
+			
+			m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
+
+			// Edge cases
+			if (i == m_width)
+			{
+				m_pGridTiles.back()->SetEdgeCaseRow(true);
+			}
+			if (j == 0 || j == i - 1)
+			{
+				m_pGridTiles.back()->SetEdgeCaseCol(true);
+			}
+
+			m_pGameObject->AddChild(newTile);
+			tempPos._x += (float)newTile->GetComponent<GridTile>()->GetDefaultTexture()->GetTextWidth();
+		}
+
+		// Adapt tile position
+		m_gridPosition._x += m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2;
+		m_gridPosition._y -= m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f;
+	}
+	std::reverse(m_pGridTiles.begin(), m_pGridTiles.end());
+
+	// Adjacent tiles 
+	for (int i = 0; i < (int)m_pGridTiles.size(); i++)
+	{
+		rightChild = i * 2 + offset;
+		leftChild = i * 2 + offset + 1;
+		counter++;
+
+		if (counter != endOfLine)
+		{
+			offset--;
+		}
+		else
+		{
+			counter = 0;
+			endOfLine++;
+		}
+
+		// Vertical 
+		if (rightChild < m_pGridTiles.size())
+		{
+			m_pGridTiles[i]->AddTileConnections(m_pGridTiles[rightChild], TileConnections::Down);
+			m_pGridTiles[rightChild]->AddTileConnections(m_pGridTiles[i], TileConnections::Up);
+		}
+
+		// Horizontal
+		if (leftChild < m_pGridTiles.size())
+		{
+			m_pGridTiles[i]->AddTileConnections(m_pGridTiles[leftChild], TileConnections::Left);
+			m_pGridTiles[leftChild]->AddTileConnections(m_pGridTiles[i], TileConnections::Right);
+		}
+		
+	}
+}
+
+int dae::WorldGrid::GetCubeIndex(GridTile* tile) const
+{
+	for (int i{}; i < (int)m_pGridTiles.size(); i++)
+	{
+		if (m_pGridTiles[i] == tile)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 void dae::WorldGrid::AddObserver(Observer* observer) const
 {
 	m_pSubject->AddObserver(observer);
@@ -30,10 +118,6 @@ void dae::WorldGrid::AddObserver(Observer* observer) const
 void dae::WorldGrid::RemoveObserver(Observer* observer) const
 {
 	m_pSubject->RemoveObserver(observer);
-}
-
-void dae::WorldGrid::Initialize()
-{
 }
 
 void dae::WorldGrid::Update(float)
@@ -49,7 +133,7 @@ void dae::WorldGrid::Update(float)
 		m_hasChangedTile = false;
 	}
 	
-	for (const auto& pTile : m_pGridTiles)
+	/*for (const auto& pTile : m_pGridTiles)
 	{
 		auto* tileInfo = pTile.lock()->GetComponent<GridTileInfo>();
 		if (tileInfo != nullptr)
@@ -77,9 +161,10 @@ void dae::WorldGrid::Update(float)
 				}
 			}		
 		}
-	}
+	}*/
 }
 
 void dae::WorldGrid::Render()
 {
+
 }

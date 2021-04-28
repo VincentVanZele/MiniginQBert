@@ -1,5 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
+#include "Texture2D.h"
+#include <array>
 
 namespace dae
 {
@@ -8,63 +10,74 @@ namespace dae
 		Spawn, Wall, Tile, ChangedTile
 	};
 
-	class GridTile
+	enum class TileConnections
+	{
+		Up, Down, Left, Right
+	};
+
+	class GridTile : public BaseComponent
 	{
 	public:
-		GridTile(Float2 position, TileState type)
-			: _center{ position._x, position._y }
-			, _state{ type }
-		{}
+		GridTile(Float2 center);
+		~GridTile() override = default;
 
+		GridTile(const GridTile& other) = delete;
+		GridTile(GridTile&& other) noexcept = delete;
+		GridTile& operator=(const GridTile& other) = delete;
+		GridTile& operator=(GridTile&& other) noexcept = delete;
+
+		void Initialize() override;
+		void Update(float deltaTime) override;
+		void Render() override;
+
+		void AddTileConnections(GridTile* tileToLink, TileConnections connection);
+		std::array<GridTile*, 4> GetTileConnections() const 
+		{
+			return m_pAdjacentTiles;
+		}
+
+		void SetEdgeCaseRow(bool edgeCase)
+		{
+			m_edgecaseRow = edgeCase;
+		};
+		void SetEdgeCaseCol(bool edgeCase)
+		{
+			m_edgecaseCol = edgeCase;
+		}
+		
 		Float2 GetCenter() const
 		{
-			return _center;
+			return m_tileCenter;
 		}
 		void SetCenter(Float2 center)
 		{
-			_center = center;
+			m_tileCenter = center;
 		}
 
 		TileState GetTileState() const
 		{
-			return _state;
+			return m_state;
 		}
 		void SetTileState(TileState state)
 		{
-			_state = state;
+			m_state = state;
 		}
 
-	private:
-		Float2 _center;
-		TileState _state;
-	};
-
-	class GridTileInfo : public BaseComponent
-	{
-	public:
-		GridTileInfo(GridTile tile, Float2 center)
-			: m_gridTile(tile)
-			, m_tileCenter(center)
-		{}
-		~GridTileInfo() override = default;
-
-		GridTileInfo(const GridTileInfo& other) = delete;
-		GridTileInfo(GridTileInfo&& other) noexcept = delete;
-		GridTileInfo& operator=(const GridTileInfo& other) = delete;
-		GridTileInfo& operator=(GridTileInfo&& other) noexcept = delete;
-
-		GridTile GetTile() const 
+		std::shared_ptr<Texture2D> GetDefaultTexture() const
 		{
-			return m_gridTile;
-		}
-		void SetGridTile(GridTile tile)
-		{
-			m_gridTile = tile;
+			return m_pTextDefault;
 		}
 		
 	private:
-		GridTile m_gridTile;
 		Float2 m_tileCenter{};
+		TileState m_state = TileState::Tile;
+
+		std::array<GridTile*, 4> m_pAdjacentTiles;
+		
+		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged;
+
+		bool m_NeedUpdate = true;
+		bool m_edgecaseRow{ false }, m_edgecaseCol{ false };
 	};
 
 }

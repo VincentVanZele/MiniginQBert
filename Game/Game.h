@@ -3,6 +3,8 @@
 
 namespace dae
 {
+	class WorldGrid;
+
 	class Game : public Minigin
 	{
 	public:
@@ -13,8 +15,11 @@ namespace dae
 
 		void SinglePlayer();
 		void Coop();
+		void Test();
 
 	private:
 		bool _isCoop = true;
+
+		WorldGrid* m_world{nullptr};
 	};
 }

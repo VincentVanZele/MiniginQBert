@@ -5,11 +5,13 @@
 
 namespace dae
 {
+	class GridTile;
+	
 	// Replacement of WorldComponent
 	class WorldGrid : public BaseComponent
 	{
 	public:
-		WorldGrid(std::vector<std::weak_ptr<GameObject>> gridTiles);
+		WorldGrid(int width, Float2 pos);
 		~WorldGrid() override;
 
 		void Initialize() override;
@@ -21,6 +23,8 @@ namespace dae
 		WorldGrid& operator=(const WorldGrid& other) = delete;
 		WorldGrid& operator=(WorldGrid&& other) noexcept = delete;
 
+		int GetCubeIndex(GridTile* tile) const;
+
 		void AddObserver(Observer* observer) const;
 		void RemoveObserver(Observer* observer) const;
 
@@ -28,9 +32,10 @@ namespace dae
 		bool m_hasChangedTile = false;
 		
 	private:
-		std::vector<std::weak_ptr<GameObject>> m_pGridTiles{};
+		std::vector<GridTile*> m_pGridTiles;
+		Float2 m_gridPosition{};
+		int m_width;
 		
-		float m_MinDistance = 15.f;
 		Subject* m_pSubject = nullptr;
 	};
 

@@ -63,5 +63,8 @@
     <ClCompile Include="GameCommands.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="GridTile.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

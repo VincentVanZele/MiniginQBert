@@ -10,6 +10,7 @@ namespace dae
 {
 	class Subject;
 	class Observer;
+	class GridTile;
 	
 	class Player : public BaseComponent
 	{
@@ -30,9 +31,19 @@ namespace dae
 		float GetWalkSpeed() const { return m_WalkSpeed; }
 		Input GetInput() const { return m_Input; }
 
+		void SetCurrentTile(GridTile* tile)
+		{
+			m_pCurrentTile = tile;
+		}
+		GridTile* GetCurrentTile() const
+		{
+			return m_pCurrentTile;
+		}
+
+		void ToTile(GridTile* tile);
+
 		void AddObserver(Observer* observer);
 		void RemoveObserver(Observer* observer);
-
 
 		void SetHasDied(bool died)
 		{
@@ -65,8 +76,10 @@ namespace dae
 		int m_ControllerId{};
 		Input m_Input{};
 		
-		SpriteComponent* m_pSprite = nullptr;	
-		
+		SpriteComponent* m_pSprite = nullptr;
+		Texture2D* m_pTexture;
+
+		GridTile* m_pCurrentTile;
 		const float m_WalkSpeed = 80.0f;
 
 		Subject* m_pSubject = nullptr;

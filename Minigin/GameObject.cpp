@@ -13,6 +13,15 @@ dae::GameObject::~GameObject()
 			pComp = nullptr;
 		}
 	}
+
+	for (auto pChild : m_pChildren)
+	{
+		if (pChild != nullptr)
+		{
+			delete pChild;
+			pChild = nullptr;
+		}
+	}
 };
 
 void dae::GameObject::Initialize()
@@ -21,6 +30,11 @@ void dae::GameObject::Initialize()
 	{
 		pComp->Initialize();
 	}
+
+	for (auto pChild : m_pChildren)
+	{
+		pChild->Initialize();
+	}
 }
 
 void dae::GameObject::Update(float deltaTime)
@@ -28,6 +42,10 @@ void dae::GameObject::Update(float deltaTime)
 	for (BaseComponent* pComp : m_pComponents)
 	{
 		pComp->Update(deltaTime);
+	}
+	for (auto pChild : m_pChildren)
+	{
+		pChild->Update(deltaTime);
 	}
 }
 
@@ -44,6 +62,10 @@ void dae::GameObject::Render() const
 		Renderer::GetInstance().RenderTexture(*m_pTexture, pos._x, pos._y);
 	}
 
+	for (auto child : m_pChildren)
+	{
+		child->Render();
+	}
 }
 
 void dae::GameObject::SetTexture(const std::string& filename)
@@ -89,4 +111,10 @@ void dae::GameObject::RemoveComponent(BaseComponent* pComp)
 
 	m_pComponents.erase(it);
 	pComp->m_pGameObject = nullptr;
+}
+
+void dae::GameObject::AddChild(GameObject* pChild)
+{
+	//pChild->m_pParent = this;
+	m_pChildren.push_back(pChild);
 }

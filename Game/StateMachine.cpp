@@ -173,6 +173,7 @@ void dae::RightState::EnterState()
 
 dae::ActorState* dae::RightState::Update(float deltaTime)
 {
+	// walk will probably delete
     if (m_pPlayer->GetInput() == Input::Up)
     {
         Float3 pos = m_pGameObject->GetPosition();
@@ -187,4 +188,30 @@ dae::ActorState* dae::RightState::Update(float deltaTime)
 
 void dae::RightState::ExitState()
 {
+}
+
+// ===========
+//    Jump
+// ===========
+
+dae::JumpingState::JumpingState(dae::GameObject* pGameObject)
+	: ActorState(pGameObject)
+{
+	
+}
+
+void dae::JumpingState::EnterState()
+{
+	
+}
+
+dae::ActorState* dae::JumpingState::Update(float )
+{
+
+    return new IdleState(m_pGameObject);
+}
+
+void dae::JumpingState::ExitState()
+{
+	
 }

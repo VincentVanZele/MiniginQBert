@@ -5,10 +5,13 @@
 #include "InputManager.h"
 #include "ServiceLocator.h"
 #include "GameCommands.h"
+#include "GridTile.h"
 #include "Subject.h"
 
 dae::Player::Player(PlayerIndex player)
 	: m_PlayerNumber{ player }
+	, m_pTexture(nullptr)
+	, m_pCurrentTile(nullptr)
 {
 }
 
@@ -73,6 +76,16 @@ void dae::Player::Update(float deltaTime)
 void dae::Player::Render()
 {
 }
+
+void dae::Player::ToTile(GridTile* tile)
+{
+	if (tile == nullptr)
+		return;
+
+	m_pCurrentTile = tile;
+	m_pGameObject->SetPosition(m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y);
+}
+
 
 void dae::Player::AddObserver(Observer* observer)
 {

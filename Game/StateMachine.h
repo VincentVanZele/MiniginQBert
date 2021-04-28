@@ -63,4 +63,16 @@ namespace dae
 		void ExitState() override;
 
 	};
+
+	class JumpingState : public ActorState
+	{
+	public:
+		JumpingState(dae::GameObject* pGameObject);
+		~JumpingState() = default;
+
+		void EnterState() override;
+		ActorState* Update(float deltaTime) override;
+		void ExitState() override;
+
+	};
 }

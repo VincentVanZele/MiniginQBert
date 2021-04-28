@@ -33,6 +33,10 @@ namespace dae
 
 		void AddComponent(BaseComponent* pComp);
 		void RemoveComponent(BaseComponent* pComp);
+		
+		void AddChild(GameObject* pChild);
+		std::vector<GameObject*> const& GetChildren() { return m_pChildren; }
+		bool HasChildren() const { return m_pChildren.size() > 0; }
 
 		template <class T>
 		T* GetComponent()
@@ -51,5 +55,6 @@ namespace dae
 
 		std::shared_ptr<Texture2D> m_pTexture{};
 		std::vector<BaseComponent*> m_pComponents{};
+		std::vector<GameObject*> m_pChildren;
 	};
 }
