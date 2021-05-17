@@ -70,6 +70,50 @@ namespace dae
 			:_x(0), _y(0), _z(0)
 		{
 		}
+
+		Float3 Normalize() const
+		{
+			const float l = sqrt((_x * _x) + (_y * _y) + (_z * _z));
+			return Float3{ _x / l, _y / l, _z / l };
+		}
+
+		Float3 operator+(const Float3& vector) const
+		{
+			return Float3{ _x + vector._x, _y + vector._y, _z + vector._z };
+		}
+
+		Float3 operator-(const Float3& vector) const
+		{
+			return Float3{ _x - vector._x, _y - vector._y, _z - vector._z };
+		}
+		Float3 operator*(const Float3& vector) const
+		{
+			return Float3{ _x * vector._x, _y * vector._y, _z * vector._z };
+		}
+		Float3 operator/(const Float3& vector) const
+		{
+			return Float3{ _x / vector._x, _y / vector._y, _z / vector._z };
+		}
+
+		Float3 operator-(float const& num) const
+		{
+			return Float3{ _x - num, _y - num, _z - num };
+		}
+		Float3 operator+(float const& num) const
+		{
+			return Float3{ _x + num, _y + num, _z + num};
+		}
+		Float3 operator*(float const& num) const
+		{
+			return Float3{ _x * num, _y * num, _z * num };
+		}
+
+		Float3 operator/(float const& num) const
+		{
+			return Float3{ _x / num, _y / num, _z / num };
+		}
+
+		
 	};
 
 	// F4

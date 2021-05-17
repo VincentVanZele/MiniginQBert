@@ -36,6 +36,20 @@ namespace dae
 			return m_pAdjacentTiles;
 		}
 
+		bool HasConnectedTileAt(TileConnections dir) const
+		{
+			if (m_pAdjacentTiles.at((int)dir) != nullptr)
+			{
+				return true;
+			}
+			return false;
+		};
+
+		GridTile* GetConnectedTileAt(TileConnections dir) const
+		{
+			return m_pAdjacentTiles.at((int)dir);
+		};
+
 		void SetEdgeCaseRow(bool edgeCase)
 		{
 			m_edgecaseRow = edgeCase;

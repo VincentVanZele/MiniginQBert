@@ -8,6 +8,7 @@
 // Replaces PlayerComponent.h
 namespace dae
 {
+	enum class TileConnections;
 	class Subject;
 	class Observer;
 	class GridTile;
@@ -15,22 +16,25 @@ namespace dae
 	class Player : public BaseComponent
 	{
 	public:
+		// Player 
 		Player(PlayerIndex player = PlayerIndex::PlayerOne);
-		~Player() override;
-		
-		Player(const Player& other) = delete;
-		Player(Player&& other) noexcept = delete;
-		Player& operator=(const Player& other) = delete;
-		Player& operator=(Player&& other) noexcept = delete;
+		virtual ~Player();
 
+		Player(Player const& other) = delete;
+		Player(Player&& other) = delete;
+		Player& operator=(Player const& rhs) = delete;
+		Player& operator=(Player&& rhs) = delete;
+
+		// Overrides
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		void Render() override;
 
+		// Controller
 		int GetControllerId() const { return m_ControllerId; }
-		float GetWalkSpeed() const { return m_WalkSpeed; }
 		Input GetInput() const { return m_Input; }
 
+		// Tile
 		void SetCurrentTile(GridTile* tile)
 		{
 			m_pCurrentTile = tile;
@@ -40,11 +44,17 @@ namespace dae
 			return m_pCurrentTile;
 		}
 
-		void ToTile(GridTile* tile);
+		void MoveTo(TileConnections connection);
+		void SetBaseTile(GridTile* tile);
 
-		void AddObserver(Observer* observer);
-		void RemoveObserver(Observer* observer);
+		// Textures
+		void UpdateTextures(TileConnections state);
 
+		// Subject
+		void AddObserver(Observer* observer) const;
+		void RemoveObserver(Observer* observer) const;
+
+		// Lives
 		void SetHasDied(bool died)
 		{
 			m_hasDied = died;
@@ -75,15 +85,21 @@ namespace dae
 
 		int m_ControllerId{};
 		Input m_Input{};
-		
-		SpriteComponent* m_pSprite = nullptr;
-		Texture2D* m_pTexture;
-
-		GridTile* m_pCurrentTile;
-		const float m_WalkSpeed = 80.0f;
-
 		Subject* m_pSubject = nullptr;
-		
-		int m_lives = 10;
+
+		// Graphics
+		SpriteComponent* m_pSprite = nullptr;
+		std::shared_ptr<Texture2D> m_pTexture;
+
+		// Movement
+		GridTile* m_pCurrentTile;
+		bool m_needMoveUpdate{ false };
+
+		const float m_WalkSpeed = 80.0f;
+		Float2 m_CurrentPosition, m_TargetPosition;
+		bool m_IsMoving{ false };
+
+		// Other
+		int m_lives = 10;	
 	};
 }

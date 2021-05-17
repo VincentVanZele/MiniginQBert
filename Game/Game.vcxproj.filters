@@ -14,6 +14,9 @@
     <Filter Include="Logic">
       <UniqueIdentifier>{c988039d-c25e-4a53-9a74-66cbb32cc241}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{090f66b4-4c4a-4c88-9620-baa2b7554ec0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -31,14 +34,17 @@
     <ClInclude Include="WorldGrid.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Logic</Filter>
-    </ClInclude>
     <ClInclude Include="GridTile.h">
       <Filter>Logic</Filter>
     </ClInclude>
     <ClInclude Include="GameCommands.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,14 +63,17 @@
     <ClCompile Include="WorldGrid.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="GameCommands.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="GridTile.cpp">
       <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -69,12 +69,12 @@ void dae::UpState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Up");
 }
 
-dae::ActorState* dae::UpState::Update(float deltaTime)
+dae::ActorState* dae::UpState::Update(float )
 {
     if (m_pPlayer->GetInput() == Input::Up)
     {
         Float3 pos = m_pGameObject->GetPosition();
-        pos._x -= deltaTime * m_pPlayer->GetWalkSpeed();
+        //pos._x -= deltaTime * m_pPlayer->GetWalkSpeed();
     	
         m_pGameObject->SetPosition(pos._x, pos._y);
         return nullptr;
@@ -103,12 +103,12 @@ void dae::DownState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Down");
 }
 
-dae::ActorState* dae::DownState::Update(float deltaTime)
+dae::ActorState* dae::DownState::Update(float )
 {
     if (m_pPlayer->GetInput() == Input::Down)
     {
         Float3 pos = m_pGameObject->GetPosition();
-        pos._x += deltaTime * m_pPlayer->GetWalkSpeed();
+        //pos._x += deltaTime * m_pPlayer->GetWalkSpeed();
     	
         m_pGameObject->SetPosition(pos._x, pos._y);
         return nullptr;
@@ -137,12 +137,12 @@ void dae::LeftState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Left");
 }
 
-dae::ActorState* dae::LeftState::Update(float deltaTime)
+dae::ActorState* dae::LeftState::Update(float )
 {
     if (m_pPlayer->GetInput() == Input::Left)
     {
         Float3 pos = m_pGameObject->GetPosition();
-        pos._y += deltaTime * m_pPlayer->GetWalkSpeed();
+        //pos._y += deltaTime * m_pPlayer->GetWalkSpeed();
     	
         m_pGameObject->SetPosition(pos._x, pos._y);
         return nullptr;
@@ -171,13 +171,13 @@ void dae::RightState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Right");
 }
 
-dae::ActorState* dae::RightState::Update(float deltaTime)
+dae::ActorState* dae::RightState::Update(float )
 {
 	// walk will probably delete
     if (m_pPlayer->GetInput() == Input::Up)
     {
         Float3 pos = m_pGameObject->GetPosition();
-        pos._y -= deltaTime * m_pPlayer->GetWalkSpeed();
+       // pos._y -= deltaTime * m_pPlayer->GetWalkSpeed();
     	
         m_pGameObject->SetPosition(pos._x, pos._y);
         return nullptr;
