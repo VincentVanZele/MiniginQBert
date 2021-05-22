@@ -11,6 +11,7 @@
 
 #include "FPSComponent.h"
 #include "FPSCounter.h"
+#include "GameScene.h"
 #include "TextComponent.h"
 #include "PlayerComponent.h"
 #include "LivesComponent.h"
@@ -18,6 +19,7 @@
 #include "ScoreComponent.h"
 #include "ScoreObserver.h"
 #include "WorldGrid.h"
+#include "Player.h"
 #include "GridTile.h"
 #include "WorldComponent.h"
 
@@ -41,8 +43,8 @@ void dae::Game::Initialize()
 
 void dae::Game::Test()
 {
-	Scene* scene = SceneManager::GetInstance().CreateScene("Game");
-
+	
+	Scene* scene = SceneManager::GetInstance().CreateScene("GameScene");
 	// Background
 	auto go = std::make_shared<GameObject>();
 	go->SetTexture("background.jpg");
@@ -75,12 +77,19 @@ void dae::Game::Test()
 
 	m_world = new WorldGrid(8, Float2(200,300));	
 	level->AddComponent(m_world);
+
+	// Player
+	auto player = std::make_shared<GameObject>();
 	
+	m_player = new Player();
+	player->AddComponent(m_player);
+	
+	scene->Add(player);
 	scene->Add(level);
 	
 	SceneManager::GetInstance().SetActiveScene(scene);
 }
-
+/*
 void dae::Game::SinglePlayer()
 {
 	Scene* scene = SceneManager::GetInstance().CreateScene("Game");
@@ -332,4 +341,4 @@ void dae::Game::Coop()
 	// -> is it an issue though ? 
 
 	SceneManager::GetInstance().SetActiveScene(scene);
-}
+}*/

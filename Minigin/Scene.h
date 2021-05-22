@@ -9,7 +9,7 @@ namespace dae
 	{
 	public:
 		Scene(const std::string& name);
-		~Scene() = default;
+		virtual ~Scene() = default;
 
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;

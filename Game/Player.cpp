@@ -28,7 +28,7 @@ dae::Player::~Player()
 void dae::Player::Initialize()
 {
 	m_pSprite = m_pGameObject->GetComponent<SpriteComponent>();
-	m_pTexture = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Textures/QBert/QBert_DownLeft_Qube.png");
+	m_pTexture = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert.png");
 	
 	switch (m_PlayerNumber)
 	{

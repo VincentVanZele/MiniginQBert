@@ -3,6 +3,7 @@
 
 namespace dae
 {
+	class Player;
 	class WorldGrid;
 
 	class Game : public Minigin
@@ -12,7 +13,7 @@ namespace dae
 		~Game() = default;
 	protected:
 		void Initialize() override;
-
+		
 		void SinglePlayer();
 		void Coop();
 		void Test();
@@ -21,5 +22,6 @@ namespace dae
 		bool _isCoop = true;
 
 		WorldGrid* m_world{nullptr};
+		Player* m_player{ nullptr };
 	};
 }

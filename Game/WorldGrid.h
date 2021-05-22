@@ -24,6 +24,7 @@ namespace dae
 		WorldGrid& operator=(WorldGrid&& other) noexcept = delete;
 
 		int GetCubeIndex(GridTile* tile) const;
+		GridTile* GetCubeAtIndex(int index) const;
 
 		void AddObserver(Observer* observer) const;
 		void RemoveObserver(Observer* observer) const;

@@ -110,6 +110,11 @@ int dae::WorldGrid::GetCubeIndex(GridTile* tile) const
 	return -1;
 }
 
+dae::GridTile* dae::WorldGrid::GetCubeAtIndex(int ) const
+{
+	return m_pGridTiles.front();
+}
+
 void dae::WorldGrid::AddObserver(Observer* observer) const
 {
 	m_pSubject->AddObserver(observer);

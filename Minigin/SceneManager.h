@@ -20,7 +20,7 @@ namespace dae
 		void Update(float deltaTime) const;
 		void Render() const;
 		void Destroy();
-		
+
 		Scene* CreateScene(const std::string& name);
 		
 		void SetActiveScene(const std::string& sceneName);

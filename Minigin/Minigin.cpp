@@ -45,7 +45,7 @@ void dae::Minigin::Window()
 	ServiceLocator::GetRenderer()->GetInstance().Initialize(window);
 
 	ServiceLocator::GetResourceManager()->GetInstance().Initialize("../Data/");
-
+	
 	_putenv("SDL_AUDIODRIVER=DirectSound");
 	SDL_Init(SDL_INIT_AUDIO);
 	initAudio();
