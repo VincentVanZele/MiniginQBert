@@ -21,7 +21,7 @@ namespace dae
 		ColliderComponent& operator=(ColliderComponent&& other) noexcept = delete;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		void UpdatePosition(int x, int y)

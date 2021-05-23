@@ -6,7 +6,7 @@ namespace dae
 	class ScoreObserver : public Observer
 	{
 	public:
-		void Notify(GameObject* gO, Event event) override;
+		void Notify(std::shared_ptr<GameObject> gO, Event event) override;
 		int GetScore() const
 		{
 			return m_Score;

@@ -15,7 +15,7 @@ namespace dae
 		void RemoveAllObservers();
 		void DeleteAllObservers();
 
-		void Notify(GameObject* gameObject, Event event);
+		void Notify(std::shared_ptr<GameObject> gameObject, Event event);
 
 	private:
 		std::vector<Observer*> m_Observers{};

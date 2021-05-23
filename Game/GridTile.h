@@ -2,6 +2,7 @@
 #include "BaseComponent.h"
 #include "Texture2D.h"
 #include <array>
+#include <Structs.h>
 
 namespace dae
 {
@@ -27,11 +28,11 @@ namespace dae
 		GridTile& operator=(GridTile&& other) noexcept = delete;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		void AddTileConnections(GridTile* tileToLink, TileConnections connection);
-		std::array<GridTile*, 4> GetTileConnections() const 
+		std::array<GridTile*, 4> GetTileConnections() const
 		{
 			return m_pAdjacentTiles;
 		}

@@ -20,7 +20,7 @@ namespace dae
 		ScoreComponent& operator=(ScoreComponent&& other) noexcept = delete;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		// no need for subjects -> just need observers values
@@ -31,6 +31,6 @@ namespace dae
 		int m_Score{};
 		
 		ScoreObserver* m_pScoreObs = nullptr;
-		TextComponent* m_pTextComp = nullptr;		
+		TextComponent* m_pTextComp = nullptr;
 	};
 }

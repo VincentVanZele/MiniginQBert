@@ -21,7 +21,7 @@ namespace dae
 		PlayerComponent& operator=(PlayerComponent&& other) noexcept = delete;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		int GetControllerId() const

@@ -14,16 +14,16 @@ dae::SpriteComponent::SpriteComponent()
 {
 }
 
-void dae::SpriteComponent::Update(float)
+void dae::SpriteComponent::Update()
 {
 	m_deltaTime += GameTime::GetInstance().GetDeltaTime();
 
-	m_ActiveSprite->Update(m_deltaTime);
+	m_ActiveSprite->Update();
 }
 
 void dae::SpriteComponent::Render()
 {
-	m_ActiveSprite->Draw();
+	m_ActiveSprite->Render();
 }
 
 void dae::SpriteComponent::AddAnimation(std::shared_ptr<Animation> sprite)

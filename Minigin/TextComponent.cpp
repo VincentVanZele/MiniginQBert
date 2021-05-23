@@ -3,6 +3,7 @@
 #include <SDL_ttf.h>
 #include "Renderer.h"
 #include "GameObject.h"
+#include "TransformComponent.h"
 
 dae::TextComponent::TextComponent(const std::shared_ptr<Font>& font, const std::string& text, const Float3 color)
 	: m_font{ font }
@@ -35,9 +36,8 @@ void dae::TextComponent::SetTextSize(unsigned int size)
 	m_dirtyFlag = true;
 }
 
-void dae::TextComponent::Update(float deltaTime)
+void dae::TextComponent::Update()
 {
-	UNREFERENCED_PARAMETER(deltaTime);
 
 	if (m_dirtyFlag)
 	{
@@ -61,7 +61,7 @@ void dae::TextComponent::Render()
 {
 	if (m_texture != nullptr)
 	{
-		const Float3 pos = m_pGameObject->GetPosition();
+		const Float2 pos = m_pGameObject.lock()->GetTransform()->GetPosition();
 		Renderer::GetInstance().RenderTexture(*m_texture, pos._x, pos._y);
 	}
 }

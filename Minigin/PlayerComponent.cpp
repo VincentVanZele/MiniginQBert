@@ -5,6 +5,7 @@
 #include "ServiceLocator.h"
 #include "InputManager.h"
 #include "WorldComponent.h"
+#include "TransformComponent.h"
 
 dae::PlayerComponent::PlayerComponent(PlayerIndex player)
 	: m_PlayerNumber{ player }
@@ -42,15 +43,10 @@ void dae::PlayerComponent::Initialize()
 		}
 	}
 
-	InputManager::GetInstance().AddCommand(new Die(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()->GetComponent<PlayerComponent>()->m_hasDied), ControllerButton::AVK);
-	InputManager::GetInstance().AddCommand(new Kill(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()->GetComponent<WorldComponent>()->m_hasKilled ), ControllerButton::XVK);
-	InputManager::GetInstance().AddCommand(new ChangeTile(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()->GetComponent<WorldComponent>()->m_hasChengedTile), ControllerButton::YVK);
 }
 
-void dae::PlayerComponent::Update(float deltaTime)
+void dae::PlayerComponent::Update()
 {
-	UNREFERENCED_PARAMETER(deltaTime);
-	//temporary -> will be changed to state machine
 	if(m_hasDied)
 	{
 		--m_lives;

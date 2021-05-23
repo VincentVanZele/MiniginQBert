@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "StateMachine.h"
 #include "InputManager.h"
+#include "TransformComponent.h"
+#include "GameObject.h"
 
 // ==========
 //    Idle
 // ==========
 
-dae::IdleState::IdleState(dae::GameObject* pGameObject)
+dae::IdleState::IdleState(std::shared_ptr<GameObject> pGameObject)
     : ActorState(pGameObject)
 {
     m_pPlayer = pGameObject->GetComponent<Player>();
@@ -17,9 +19,8 @@ void dae::IdleState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Up");
 }
 
-dae::ActorState* dae::IdleState::Update(float deltaTime)
+dae::ActorState* dae::IdleState::Update()
 {
-    UNREFERENCED_PARAMETER(deltaTime);
 
     if (m_pPlayer != nullptr)
     {
@@ -57,7 +58,7 @@ void dae::IdleState::ExitState()
 // ==========
 
 
-dae::UpState::UpState(dae::GameObject* pGameObject)
+dae::UpState::UpState(std::shared_ptr<GameObject> pGameObject)
     : ActorState(pGameObject)
 {
     m_pPlayer = pGameObject->GetComponent<Player>();
@@ -69,14 +70,14 @@ void dae::UpState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Up");
 }
 
-dae::ActorState* dae::UpState::Update(float )
+dae::ActorState* dae::UpState::Update( )
 {
     if (m_pPlayer->GetInput() == Input::Up)
     {
-        Float3 pos = m_pGameObject->GetPosition();
+        Float2 pos = m_pGameObject->GetTransform()->GetPosition();
         //pos._x -= deltaTime * m_pPlayer->GetWalkSpeed();
     	
-        m_pGameObject->SetPosition(pos._x, pos._y);
+        m_pGameObject->GetTransform()->SetPosition(Float2{ pos._x, pos._y });
         return nullptr;
     }
 
@@ -91,7 +92,7 @@ void dae::UpState::ExitState()
 //    Down
 // ==========
 
-dae::DownState::DownState(dae::GameObject* pGameObject)
+dae::DownState::DownState(std::shared_ptr<GameObject> pGameObject)
     : ActorState(pGameObject)
 {
     m_pPlayer = pGameObject->GetComponent<Player>();
@@ -103,14 +104,14 @@ void dae::DownState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Down");
 }
 
-dae::ActorState* dae::DownState::Update(float )
+dae::ActorState* dae::DownState::Update( )
 {
     if (m_pPlayer->GetInput() == Input::Down)
     {
-        Float3 pos = m_pGameObject->GetPosition();
+        Float2 pos = m_pGameObject->GetTransform()->GetPosition();
         //pos._x += deltaTime * m_pPlayer->GetWalkSpeed();
     	
-        m_pGameObject->SetPosition(pos._x, pos._y);
+        m_pGameObject->GetTransform()->SetPosition(Float2{ pos._x, pos._y });
         return nullptr;
     }
 
@@ -125,7 +126,7 @@ void dae::DownState::ExitState()
 //    Left
 // ==========
 
-dae::LeftState::LeftState(dae::GameObject* pGameObject)
+dae::LeftState::LeftState(std::shared_ptr<GameObject> pGameObject)
     : ActorState(pGameObject)
 {
     m_pPlayer = pGameObject->GetComponent<Player>();
@@ -137,14 +138,14 @@ void dae::LeftState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Left");
 }
 
-dae::ActorState* dae::LeftState::Update(float )
+dae::ActorState* dae::LeftState::Update( )
 {
     if (m_pPlayer->GetInput() == Input::Left)
     {
-        Float3 pos = m_pGameObject->GetPosition();
+        Float2 pos = m_pGameObject->GetTransform()->GetPosition();
         //pos._y += deltaTime * m_pPlayer->GetWalkSpeed();
     	
-        m_pGameObject->SetPosition(pos._x, pos._y);
+        m_pGameObject->GetTransform()->SetPosition(Float2{ pos._x, pos._y });
         return nullptr;
     }
 
@@ -159,7 +160,7 @@ void dae::LeftState::ExitState()
 //    Right
 // ===========
 
-dae::RightState::RightState(dae::GameObject* pGameObject)
+dae::RightState::RightState(std::shared_ptr<GameObject> pGameObject)
     : ActorState(pGameObject)
 {
     m_pPlayer = pGameObject->GetComponent<Player>();
@@ -171,15 +172,15 @@ void dae::RightState::EnterState()
     m_pSpriteComp->SetActiveAnimation("Right");
 }
 
-dae::ActorState* dae::RightState::Update(float )
+dae::ActorState* dae::RightState::Update( )
 {
 	// walk will probably delete
     if (m_pPlayer->GetInput() == Input::Up)
     {
-        Float3 pos = m_pGameObject->GetPosition();
+        Float2 pos = m_pGameObject->GetTransform()->GetPosition();
        // pos._y -= deltaTime * m_pPlayer->GetWalkSpeed();
     	
-        m_pGameObject->SetPosition(pos._x, pos._y);
+        m_pGameObject->GetTransform()->SetPosition(Float2{ pos._x, pos._y });
         return nullptr;
     }
 
@@ -194,7 +195,7 @@ void dae::RightState::ExitState()
 //    Jump
 // ===========
 
-dae::JumpingState::JumpingState(dae::GameObject* pGameObject)
+dae::JumpingState::JumpingState(std::shared_ptr<GameObject> pGameObject)
 	: ActorState(pGameObject)
 {
 	
@@ -205,7 +206,7 @@ void dae::JumpingState::EnterState()
 	
 }
 
-dae::ActorState* dae::JumpingState::Update(float )
+dae::ActorState* dae::JumpingState::Update( )
 {
 
     return new IdleState(m_pGameObject);

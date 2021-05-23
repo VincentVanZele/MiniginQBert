@@ -3,6 +3,9 @@
 
 #include "TextComponent.h"
 #include "PlayerComponent.h"
+#include "ServiceLocator.h"
+#include "GameTime.h"
+#include "GameObject.h"
 
 dae::LivesComponent::LivesComponent(PlayerComponent* comp)
 	:m_pPlayerComponent(comp)
@@ -11,7 +14,7 @@ dae::LivesComponent::LivesComponent(PlayerComponent* comp)
 
 void dae::LivesComponent::Initialize()
 {
-	m_pTextComponent = m_pGameObject->GetComponent<TextComponent>();
+	m_pTextComponent = m_pGameObject.lock()->GetComponent<TextComponent>();
 
 	// base text
 	std::stringstream ssText;
@@ -19,14 +22,13 @@ void dae::LivesComponent::Initialize()
 	m_pTextComponent->SetText(ssText.str());
 }
 
-void dae::LivesComponent::Update(float deltaTime)
+void dae::LivesComponent::Update()
 {
-	UNREFERENCED_PARAMETER(deltaTime);
 	
 	if (m_pTextComponent != nullptr && m_pPlayerComponent != nullptr)
 	{
 		// refresh rate
-		m_elapsedTime += deltaTime;
+		m_elapsedTime += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
 		if (m_elapsedTime >= m_refreshRate)
 		{
 			// reset

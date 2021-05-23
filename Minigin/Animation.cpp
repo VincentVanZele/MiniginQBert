@@ -1,7 +1,10 @@
 #include "MiniginPCH.h"
 #include "Animation.h"
+
+#include "GameTime.h"
 #include "Texture2D.h"
 #include "Renderer.h"
+#include "ServiceLocator.h"
 
 dae::Animation::Animation(std::shared_ptr<Texture2D> tex, const std::string& name, int nbrFrames)
 	: m_pTexture2D{ tex }
@@ -10,8 +13,9 @@ dae::Animation::Animation(std::shared_ptr<Texture2D> tex, const std::string& nam
 {
 }
 
-void dae::Animation::Update(float& deltaT)
+void dae::Animation::Update()
 {
+	auto deltaT = ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
 	if (m_FrameDeltatime < 0)
 	{
 		return;
@@ -28,7 +32,7 @@ void dae::Animation::Update(float& deltaT)
 	}
 }
 
-void dae::Animation::Draw() const
+void dae::Animation::Render() const
 {
 	Float4 dest{}, src{};
 	float col = (float)(m_pTexture2D->GetTextWidth() / m_nbrFrames);

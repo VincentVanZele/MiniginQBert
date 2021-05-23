@@ -3,10 +3,6 @@
 #include <mutex>
 #include <queue>
 
-// Started working with SDL_mixer library like I did before (Audio.h - Audio.cpp)
-// Preferred working with the Simple SDL files discussed in class
-// (yes i didn't see the link in the assignment description, only saw it when it was discussed in Labo class)
-// Didn't know such an implementation existed, so included and adapted my system
 // Credit to Jakebesworth for the SDL2 audio files and to any feedback that was given in class
 
 namespace dae

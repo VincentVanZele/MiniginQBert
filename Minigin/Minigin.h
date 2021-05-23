@@ -7,9 +7,9 @@ namespace dae
 	{
 		SDL_Window* window{};
 	public:
-		virtual void Initialize() = 0;
 		
 		void Window();
+		void LoadGame() const;
 		void Cleanup();
 		void Run();
 	private:

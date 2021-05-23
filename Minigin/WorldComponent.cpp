@@ -1,7 +1,6 @@
 #include "MiniginPCH.h"
 #include "WorldComponent.h"
 
-
 #include "Enums.h"
 #include "Subject.h"
 
@@ -24,9 +23,8 @@ void dae::WorldComponent::Initialize()
 {
 }
 
-void dae::WorldComponent::Update(float deltaTime)
+void dae::WorldComponent::Update()
 {
-	UNREFERENCED_PARAMETER(deltaTime);
 
 	if (m_hasKilled)
 	{

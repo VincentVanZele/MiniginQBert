@@ -10,7 +10,7 @@ namespace dae
 	class MoveUp : public BaseCommand
 	{
 	public:
-		MoveUp(int ID, RequiredKeyState state, GameObject* gO);
+		MoveUp(int ID, RequiredKeyState state, Player* gO);
 		~MoveUp() = default;
 
 		void Execute() override;
@@ -21,7 +21,7 @@ namespace dae
 	class MoveDown : public BaseCommand
 	{
 	public:
-		MoveDown(int ID, RequiredKeyState state, GameObject* gO);
+		MoveDown(int ID, RequiredKeyState state, Player* gO);
 		~MoveDown() = default;
 
 		void Execute() override;
@@ -32,7 +32,7 @@ namespace dae
 	class MoveLeft : public BaseCommand
 	{
 	public:
-		MoveLeft(int ID, RequiredKeyState state, GameObject* gO);
+		MoveLeft(int ID, RequiredKeyState state, Player* gO);
 		~MoveLeft() = default;
 
 		void Execute() override;
@@ -43,7 +43,7 @@ namespace dae
 	class MoveRight : public BaseCommand
 	{
 	public:
-		MoveRight(int ID, RequiredKeyState state, GameObject* gO);
+		MoveRight(int ID, RequiredKeyState state, Player* gO);
 		~MoveRight() = default;
 
 		void Execute() override;

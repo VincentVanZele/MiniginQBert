@@ -15,7 +15,7 @@ namespace dae
 		FPSCounter& operator=(FPSCounter&& other) noexcept = delete;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		int GetFPS() const

@@ -20,7 +20,7 @@ void dae::GridTile::Initialize()
 	
 }
 
-void dae::GridTile::Update(float )
+void dae::GridTile::Update( )
 {
 	/*auto renderer = ServiceLocator::GetRenderer();
 	

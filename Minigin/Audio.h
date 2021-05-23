@@ -1,4 +1,4 @@
-/*#pragma once
+#pragma once/*
 #include <vector>
 
 struct Mix_Chunk;

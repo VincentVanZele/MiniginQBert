@@ -12,8 +12,8 @@ namespace dae
 	public:
 		Animation(std::shared_ptr<Texture2D> tex, const std::string& name, int nbrFrames);
 
-		void Draw() const;
-		void Update(float& accuSec);
+		void Render() const;
+		void Update();
 
 		void SetTexture(std::shared_ptr<Texture2D> tex);
 		Texture2D& GetTexture() const;

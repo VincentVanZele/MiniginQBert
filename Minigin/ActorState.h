@@ -9,7 +9,7 @@ namespace dae
 	class ActorState
 	{
 	public:
-		ActorState(GameObject* pGameObject)
+		ActorState(std::shared_ptr<GameObject> pGameObject)
 		: m_pGameObject{ pGameObject }
 		{};
 		virtual ~ActorState()
@@ -25,14 +25,14 @@ namespace dae
 		virtual void EnterState() = 0;
 		virtual void ExitState() = 0;
 		
-		virtual ActorState* Update(float deltaTime) = 0;
+		virtual ActorState* Update() = 0;
 		
 
-		GameObject* GetGameObject() const
+		std::shared_ptr<GameObject> GetGameObject() const
 		{
 			return m_pGameObject;
 		}
-		void SetGameObject(GameObject* gameObject)
+		void SetGameObject(std::shared_ptr<GameObject> gameObject)
 		{
 			m_pGameObject = gameObject;
 		}
@@ -56,7 +56,7 @@ namespace dae
 		}
 	
 	protected:
-		GameObject* m_pGameObject = nullptr;
+		std::shared_ptr<GameObject> m_pGameObject = nullptr;
 		Player* m_pPlayer = nullptr;
 		SpriteComponent* m_pSpriteComp = nullptr;
 	};

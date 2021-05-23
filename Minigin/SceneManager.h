@@ -17,23 +17,24 @@ namespace dae
 		SceneManager& operator=(SceneManager&& other) noexcept = delete;
 
 		void Initialize();
-		void Update(float deltaTime) const;
+		void Update() const;
 		void Render() const;
 		void Destroy();
 
-		Scene* CreateScene(const std::string& name);
+		void AddScene(std::shared_ptr<Scene> scene);
+		std::shared_ptr<Scene> CreateScene(const std::string& name);
 		
 		void SetActiveScene(const std::string& sceneName);
-		void SetActiveScene(Scene* pScene);
+		void SetActiveScene(std::shared_ptr<Scene> pScene);
 		
-		Scene* GetScene(const std::string& sceneName) const;
-		Scene* GetActiveScene() const
+		std::shared_ptr<Scene> GetScene(const std::string& sceneName) const;
+		std::shared_ptr<Scene> GetActiveScene() const
 		{
 			return m_pActiveScene;
 		}
 
 	private:
-		Scene* m_pActiveScene = nullptr;
-		std::vector<Scene*> m_pScenes{};
+		std::shared_ptr<Scene> m_pActiveScene = nullptr;
+		std::vector<std::shared_ptr<Scene>> m_pScenes{};
 	};
 }

@@ -6,38 +6,37 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include "Scene.h"
 
 namespace dae
 {
-	class BaseComponent;
 	class Texture2D;
+	class TransformComponent;
 	
-	class GameObject final : public SceneObject
+	class GameObject final : public std::enable_shared_from_this<GameObject>
 	{
+		friend class BaseComponent;
 	public:
-		GameObject() = default;
+
+		GameObject(const Float2& pos = { 0.f, 0.f }, float rot = 0.0f, const Float2& sca = { 1.f, 1.f });
 		virtual ~GameObject();
-		
-		GameObject(const GameObject & other) = delete;
-		GameObject(GameObject && other) = delete;
-		GameObject& operator=(const GameObject & other) = delete;
-		GameObject& operator=(GameObject && other) = delete;
 
-		void Initialize() override;
-		void Update(float deltaTime) override;
-		void Render() const override;
+		void Initialize();
+		void Update();
+		void Render() const;
+		void Destroy();
 
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
-		Float3 GetPosition() const;
+		void DestroyObject();
+
+		static std::shared_ptr<GameObject> NewGameObject();
+
+		TransformComponent* GetTransform() const { return m_pTransform; }
 
 		void AddComponent(BaseComponent* pComp);
 		void RemoveComponent(BaseComponent* pComp);
-		
-		void AddChild(GameObject* pChild);
-		std::vector<GameObject*> const& GetChildren() { return m_pChildren; }
-		bool HasChildren() const { return m_pChildren.size() > 0; }
+		std::vector<BaseComponent*> GetComponents() const;
 
+		// Template
 		template <class T>
 		T* GetComponent()
 		{
@@ -50,11 +49,27 @@ namespace dae
 			return nullptr;
 		}
 
-	private:
-		Transform m_transform{};
 
-		std::shared_ptr<Texture2D> m_pTexture{};
-		std::vector<BaseComponent*> m_pComponents{};
-		std::vector<GameObject*> m_pChildren;
+		void AddChild(std::shared_ptr<GameObject> child);
+
+		void SetParent(std::shared_ptr<GameObject> parent);
+		std::shared_ptr<GameObject> GetParent();
+
+		void SetActive(bool active);
+		bool GetActive() const;
+
+	protected:
+	private:
+		bool m_IsInitialized = false;
+		bool m_IsActive = true;
+
+		TransformComponent* m_pTransform;
+		std::vector<BaseComponent*> m_pComponents;
+
+		std::shared_ptr<GameObject> m_pParentObject;
+		Scene* m_pScene = nullptr;
+
+		std::vector<std::shared_ptr<GameObject>> m_pChildren;
 	};
+
 }

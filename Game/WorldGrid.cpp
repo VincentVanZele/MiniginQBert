@@ -7,25 +7,12 @@
 #include "Utils.h"
 #include "Enums.h"
 
-dae::WorldGrid::WorldGrid(int width, Float2 pos)
+dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 	: m_width(width)
 	, m_gridPosition(pos)
 {
 	m_pSubject = new Subject();
-}
 
-dae::WorldGrid::~WorldGrid()
-{
-	m_pSubject->DeleteAllObservers();
-	if (m_pSubject != nullptr)
-	{
-		delete(m_pSubject);
-		m_pSubject = nullptr;
-	}
-}
-
-void dae::WorldGrid::Initialize()
-{
 	Float2 tempPos = m_gridPosition;
 	int leftChild{}, rightChild{};
 	int offset{ 1 }, endOfLine{ 1 }, counter{ 0 };
@@ -39,9 +26,9 @@ void dae::WorldGrid::Initialize()
 		// Cols
 		for (int j = 0; j < i; j++)
 		{
-			auto *newTile = new GameObject();
+			auto newTile = std::make_shared<GameObject>();
 			newTile->AddComponent(new GridTile(tempPos));
-			
+
 			m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
 
 			// Edge cases
@@ -54,7 +41,7 @@ void dae::WorldGrid::Initialize()
 				m_pGridTiles.back()->SetEdgeCaseCol(true);
 			}
 
-			m_pGameObject->AddChild(newTile);
+			go->AddChild(newTile);
 			tempPos._x += (float)newTile->GetComponent<GridTile>()->GetDefaultTexture()->GetTextWidth();
 		}
 
@@ -94,8 +81,23 @@ void dae::WorldGrid::Initialize()
 			m_pGridTiles[i]->AddTileConnections(m_pGridTiles[leftChild], TileConnections::Left);
 			m_pGridTiles[leftChild]->AddTileConnections(m_pGridTiles[i], TileConnections::Right);
 		}
-		
+
 	}
+}
+
+dae::WorldGrid::~WorldGrid()
+{
+	m_pSubject->DeleteAllObservers();
+	if (m_pSubject != nullptr)
+	{
+		delete(m_pSubject);
+		m_pSubject = nullptr;
+	}
+}
+
+void dae::WorldGrid::Initialize()
+{
+	
 }
 
 int dae::WorldGrid::GetCubeIndex(GridTile* tile) const
@@ -125,7 +127,7 @@ void dae::WorldGrid::RemoveObserver(Observer* observer) const
 	m_pSubject->RemoveObserver(observer);
 }
 
-void dae::WorldGrid::Update(float)
+void dae::WorldGrid::Update()
 {	
 	if (m_hasKilled)
 	{

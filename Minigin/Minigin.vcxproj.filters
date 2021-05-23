@@ -229,6 +229,12 @@
     <ClInclude Include="EVector4.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -353,6 +359,12 @@
     </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

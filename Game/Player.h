@@ -17,8 +17,8 @@ namespace dae
 	{
 	public:
 		// Player 
-		Player(PlayerIndex player = PlayerIndex::PlayerOne);
-		virtual ~Player();
+		Player();
+		~Player() override;
 
 		Player(Player const& other) = delete;
 		Player(Player&& other) = delete;
@@ -27,7 +27,7 @@ namespace dae
 
 		// Overrides
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		// Controller
@@ -80,7 +80,6 @@ namespace dae
 		bool m_hasDied = false;
 		
 	private:
-		PlayerIndex m_PlayerNumber = PlayerIndex::PlayerOne;
 		ActorState* m_pActivState = nullptr;
 
 		int m_ControllerId{};

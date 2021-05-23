@@ -20,9 +20,8 @@ void dae::TextObject::Initialize()
 {
 }
 
-void dae::TextObject::Update(float deltaTime)
+void dae::TextObject::Update()
 {
-	UNREFERENCED_PARAMETER(deltaTime);
 
 	if (m_dirtyFlag)
 	{

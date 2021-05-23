@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "ScoreObserver.h"
 
-void dae::ScoreObserver::Notify(GameObject* gO, Event event)
+void dae::ScoreObserver::Notify(std::shared_ptr<GameObject> gO, Event event)
 {
 	UNREFERENCED_PARAMETER(gO);
 

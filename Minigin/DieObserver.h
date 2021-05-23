@@ -6,7 +6,7 @@ namespace dae
 	class DieObserver : public Observer
 	{
 	public:
-		void Notify(GameObject* gO, Event event) override;
+		void Notify(std::shared_ptr<GameObject> gO, Event event) override;
 		int GetNumberDied() const
 		{
 			return m_DiedCounter;

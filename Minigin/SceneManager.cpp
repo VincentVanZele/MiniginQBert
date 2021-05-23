@@ -14,9 +14,9 @@ void dae::SceneManager::Initialize()
 	}
 }
 
-void dae::SceneManager::Update(float deltaTime) const 
+void dae::SceneManager::Update() const 
 {
-	m_pActiveScene->Update(deltaTime);
+	m_pActiveScene->Update();
 }
 
 void dae::SceneManager::Render() const 
@@ -26,24 +26,17 @@ void dae::SceneManager::Render() const
 
 void dae::SceneManager::Destroy()
 {
-	for (Scene* pScene : m_pScenes)
-	{
-		delete pScene;
-		pScene = nullptr;
-	}
-	m_pActiveScene = nullptr;
+
 }
 
-dae::Scene* dae::SceneManager::CreateScene(const std::string& name)
+void dae::SceneManager::AddScene(std::shared_ptr<Scene> scene)
 {
-	const auto scene = new Scene(name);
 	m_pScenes.push_back(scene);
-	return scene;
 }
 
 void dae::SceneManager::SetActiveScene(const std::string& sceneName)
 {
-	Scene* pScene = GetScene(sceneName);
+	auto pScene = GetScene(sceneName);
 	if (pScene != nullptr)
 	{
 		m_pActiveScene = pScene;
@@ -52,14 +45,14 @@ void dae::SceneManager::SetActiveScene(const std::string& sceneName)
 		std::cout << "Invalid Scene : " << sceneName << '\n';
 }
 
-void dae::SceneManager::SetActiveScene(Scene* pScene)
+void dae::SceneManager::SetActiveScene(std::shared_ptr<Scene> pScene)
 {
 	m_pActiveScene = pScene;
 }
 
-dae::Scene* dae::SceneManager::GetScene(const std::string& name) const
+std::shared_ptr<dae::Scene> dae::SceneManager::GetScene(const std::string& name) const
 {
-	for (Scene* pScene : m_pScenes)
+	for (auto pScene : m_pScenes)
 	{
 		if (pScene->GetName() == name)
 		{

@@ -3,13 +3,12 @@
 #include "GameObject.h"
 #include "Player.h"
 
-dae::MoveUp::MoveUp(int ID, RequiredKeyState state, GameObject* gO)
+dae::MoveUp::MoveUp(int ID, RequiredKeyState state, Player* gO)
 	: BaseCommand(ID, state)
 {
-	auto* pPlayerController = gO->GetComponent<Player>();
-	if (pPlayerController)
+	if (gO)
 	{
-		_cmdInput = pPlayerController->GetInput();
+		_cmdInput = gO->GetInput();
 	}
 	else
 	{
@@ -22,13 +21,12 @@ void dae::MoveUp::Execute()
 	_cmdInput = Input::Up;
 }
 
-dae::MoveDown::MoveDown(int ID, RequiredKeyState state, GameObject* gO)
+dae::MoveDown::MoveDown(int ID, RequiredKeyState state, Player* gO)
 	: BaseCommand(ID, state)
 {
-	auto* pPlayerController = gO->GetComponent<Player>();
-	if (pPlayerController)
+	if (gO)
 	{
-		_cmdInput = pPlayerController->GetInput();
+		_cmdInput = gO->GetInput();
 	}
 	else
 	{
@@ -41,13 +39,12 @@ void dae::MoveDown::Execute()
 	_cmdInput = Input::Down;
 }
 
-dae::MoveLeft::MoveLeft(int ID, RequiredKeyState state, GameObject* gO)
+dae::MoveLeft::MoveLeft(int ID, RequiredKeyState state, Player* gO)
 	: BaseCommand(ID, state)
 {
-	auto* pPlayerController = gO->GetComponent<Player>();
-	if (pPlayerController)
+	if (gO)
 	{
-		_cmdInput = pPlayerController->GetInput();
+		_cmdInput = gO->GetInput();
 	}
 	else
 	{
@@ -61,13 +58,12 @@ void dae::MoveLeft::Execute()
 	_cmdInput = Input::Left;
 }
 
-dae::MoveRight::MoveRight(int ID, RequiredKeyState state, GameObject* gO)
+dae::MoveRight::MoveRight(int ID, RequiredKeyState state, Player* gO)
 	: BaseCommand(ID, state)
 {
-	auto* pPlayerController = gO->GetComponent<Player>();
-	if (pPlayerController)
+	if (gO)
 	{
-		_cmdInput = pPlayerController->GetInput();
+		_cmdInput = gO->GetInput();
 	}
 	else
 	{

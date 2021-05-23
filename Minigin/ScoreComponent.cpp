@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "ScoreComponent.h"
 
-
+#include "GameObject.h"
 #include "ScoreObserver.h"
 #include "Subject.h"
 #include "TextComponent.h"
@@ -26,9 +26,8 @@ void dae::ScoreComponent::Initialize()
 	m_pTextComp->SetText(ssText.str());
 }
 
-void dae::ScoreComponent::Update(float deltaTime)
+void dae::ScoreComponent::Update()
 {
-	UNREFERENCED_PARAMETER(deltaTime);
 	
 	if (m_pScoreObs != nullptr && m_pTextComp != nullptr)
 	{

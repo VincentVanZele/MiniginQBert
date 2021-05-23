@@ -1,15 +1,17 @@
 #include "MiniginPCH.h"
 #include "FPSCounter.h"
+#include "ServiceLocator.h"
+#include "GameTime.h"
 
 void dae::FPSCounter::Initialize()
 {}
 
-void dae::FPSCounter::Update(float deltaTime)
+void dae::FPSCounter::Update()
 {
 	if (m_active)
 	{
 		// counter
-		m_timer += deltaTime;
+		m_timer += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
 		++m_counter;
 		if (m_timer >= 1.0f)
 		{

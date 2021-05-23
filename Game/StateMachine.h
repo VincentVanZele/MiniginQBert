@@ -7,11 +7,11 @@ namespace dae
 	class IdleState : public ActorState
 	{
 	public:
-		IdleState(dae::GameObject* pGameObject);
-		~IdleState() = default;
+		IdleState(std::shared_ptr<GameObject> pGameObject);
+		~IdleState() override = default;
 
 		void EnterState() override;
-		ActorState* Update(float deltaTime) override;
+		ActorState* Update() override;
 		void ExitState() override;
 
 	};
@@ -19,11 +19,11 @@ namespace dae
 	class UpState : public ActorState
 	{
 	public:
-		UpState(dae::GameObject* pGameObject);
-		~UpState() = default;
+		UpState(std::shared_ptr<GameObject> pGameObject);
+		~UpState() override = default;
 
 		void EnterState() override;
-		ActorState* Update(float deltaTime) override;
+		ActorState* Update() override;
 		void ExitState() override;
 
 	};
@@ -31,11 +31,11 @@ namespace dae
 	class DownState : public ActorState
 	{
 	public:
-		DownState(dae::GameObject* pGameObject);
+		DownState(std::shared_ptr<GameObject> pGameObject);
 		~DownState() = default;
 
 		void EnterState() override;
-		ActorState* Update(float deltaTime) override;
+		ActorState* Update() override;
 		void ExitState() override;
 
 	};
@@ -43,11 +43,11 @@ namespace dae
 	class LeftState : public ActorState
 	{
 	public:
-		LeftState(dae::GameObject* pGameObject);
-		~LeftState() = default;
+		LeftState(std::shared_ptr<GameObject> pGameObject);
+		~LeftState() override = default;
 
 		void EnterState() override;
-		ActorState* Update(float deltaTime) override;
+		ActorState* Update() override;
 		void ExitState() override;
 
 	};
@@ -55,11 +55,11 @@ namespace dae
 	class RightState : public ActorState
 	{
 	public:
-		RightState(dae::GameObject* pGameObject);
-		~RightState() = default;
+		RightState(std::shared_ptr<GameObject> pGameObject);
+		~RightState() override = default;
 
 		void EnterState() override;
-		ActorState* Update(float deltaTime) override;
+		ActorState* Update() override;
 		void ExitState() override;
 
 	};
@@ -67,11 +67,11 @@ namespace dae
 	class JumpingState : public ActorState
 	{
 	public:
-		JumpingState(dae::GameObject* pGameObject);
-		~JumpingState() = default;
+		JumpingState(std::shared_ptr<GameObject> pGameObject);
+		~JumpingState() override = default;
 
 		void EnterState() override;
-		ActorState* Update(float deltaTime) override;
+		ActorState* Update() override;
 		void ExitState() override;
 
 	};

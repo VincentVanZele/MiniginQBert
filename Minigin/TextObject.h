@@ -18,7 +18,7 @@ namespace dae
 		TextObject& operator=(TextObject && other) = delete;
 		
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() const override;
 
 		void SetText(const std::string& text);

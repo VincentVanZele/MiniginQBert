@@ -1,7 +1,7 @@
 #include "MiniginPCH.h"
 #include "DieObserver.h"
 
-void dae::DieObserver::Notify(GameObject* gO, Event event)
+void dae::DieObserver::Notify(std::shared_ptr<GameObject> gO, Event event)
 {
 	UNREFERENCED_PARAMETER(gO);
 

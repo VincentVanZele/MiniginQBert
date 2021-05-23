@@ -18,7 +18,7 @@ namespace dae
 		LivesComponent& operator=(LivesComponent&& other) noexcept = delete;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 	private:

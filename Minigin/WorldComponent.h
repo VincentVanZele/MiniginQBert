@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
 
+
 namespace dae
 {
 	class Subject;
@@ -21,7 +22,7 @@ namespace dae
 		void RemoveObserver(Observer* observer);
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		// variables

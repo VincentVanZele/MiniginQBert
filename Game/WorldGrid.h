@@ -11,11 +11,11 @@ namespace dae
 	class WorldGrid : public BaseComponent
 	{
 	public:
-		WorldGrid(int width, Float2 pos);
+		WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go);
 		~WorldGrid() override;
 
 		void Initialize() override;
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		WorldGrid(const WorldGrid& other) = delete;

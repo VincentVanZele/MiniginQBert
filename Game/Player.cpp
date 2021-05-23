@@ -2,6 +2,7 @@
 #include "Player.h"
 #include <iostream>
 
+#include "GameObject.h"
 #include "InputManager.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
@@ -10,10 +11,10 @@
 #include "GameCommands.h"
 #include "GridTile.h"
 #include "Subject.h"
+#include "TransformComponent.h"
 
-dae::Player::Player(PlayerIndex player)
-	: m_PlayerNumber{ player }
-	, m_pTexture(nullptr)
+dae::Player::Player()
+	: m_pTexture(nullptr)
 	, m_pCurrentTile(nullptr)
 {
 }
@@ -27,38 +28,26 @@ dae::Player::~Player()
 
 void dae::Player::Initialize()
 {
-	m_pSprite = m_pGameObject->GetComponent<SpriteComponent>();
+	m_pSprite = m_pGameObject.lock()->GetComponent<SpriteComponent>();
 	m_pTexture = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert.png");
 	
-	switch (m_PlayerNumber)
+	// 0 -> first controller
+	if (ServiceLocator::GetInputManager()->GetInstance().IsControllerConnected(0))
 	{
-	case PlayerIndex::PlayerOne:
-		// 0 -> first controller
-		if (ServiceLocator::GetInputManager()->GetInstance().IsControllerConnected(0))
-		{
-			m_ControllerId = 0;
-			break;
-		}
-	case PlayerIndex::PlayerTwo:
-		// 1 -> second controller  
-		if (ServiceLocator::GetInputManager()->GetInstance().IsControllerConnected(1))
-		{
-			m_ControllerId = 1;
-			break;
-		}
+		m_ControllerId = 0;
 	}
 
-	InputManager::GetInstance().AddCommand(new MoveUp(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()), ControllerButton::DpadUpVK);
-	InputManager::GetInstance().AddCommand(new MoveDown(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()), ControllerButton::DpadDownVK);
-	InputManager::GetInstance().AddCommand(new MoveLeft(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()), ControllerButton::DpadLeftVK);
-	InputManager::GetInstance().AddCommand(new MoveRight(m_ControllerId, RequiredKeyState::KeyDown, GetGameObject()), ControllerButton::DpadRightVK);
+	InputManager::GetInstance().AddCommand(new MoveUp(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadUpVK);
+	InputManager::GetInstance().AddCommand(new MoveDown(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadDownVK);
+	InputManager::GetInstance().AddCommand(new MoveLeft(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadLeftVK);
+	InputManager::GetInstance().AddCommand(new MoveRight(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadRightVK);
 }
 
-void dae::Player::Update(float deltaTime)
+void dae::Player::Update()
 {
 	if (m_pActivState != nullptr)
 	{
-		ActorState* newState = m_pActivState->Update(deltaTime);
+		ActorState* newState = m_pActivState->Update();
 		if (newState != nullptr)
 		{
 			m_pActivState->ExitState();
@@ -78,15 +67,15 @@ void dae::Player::Update(float deltaTime)
 
 	if(m_needMoveUpdate)
 	{
-		auto x = m_TargetPosition._x - m_pGameObject->GetPosition()._x;
-		auto y = m_TargetPosition._y - m_pGameObject->GetPosition()._y;
+		auto x = m_TargetPosition._x - m_pGameObject.lock()->GetTransform()->GetPosition()._x;
+		auto y = m_TargetPosition._y - m_pGameObject.lock()->GetTransform()->GetPosition()._y;
 
 		Float3 vectDir = Float3{ x, y, 0 };
 		vectDir = vectDir.Normalize();
 
-		const Float3 result = m_pGameObject->GetPosition() + vectDir * m_WalkSpeed * ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
+		const Float3 result = Float3{ m_pGameObject.lock()->GetTransform()->GetPosition()._x,m_pGameObject.lock()->GetTransform()->GetPosition()._y,0 } + vectDir * m_WalkSpeed * ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
 		
-		m_pGameObject->SetPosition(result._x,result._y);
+		m_pGameObject.lock()->GetTransform()->SetPosition(Float2{ result._x,result._y });
 
 		const Float2 lengthResult = Float2{ x,y };
 		if (lengthResult.Length() <= 2.f)
@@ -101,7 +90,7 @@ void dae::Player::Render()
 	// Texture
 	if (m_pTexture != nullptr)
 	{
-		const auto goPos = m_pGameObject->GetPosition();
+		const auto goPos = m_pGameObject.lock()->GetTransform()->GetPosition();
 		Renderer::GetInstance().RenderTexture(*m_pTexture, goPos._x, goPos._y);
 	}
 }
@@ -110,7 +99,7 @@ void dae::Player::MoveTo(TileConnections connection)
 {
 	if (m_pCurrentTile->HasConnectedTileAt(connection))
 	{
-		GridTile* targetTile = m_pCurrentTile->GetConnectedTileAt(connection);
+		auto targetTile = m_pCurrentTile->GetConnectedTileAt(connection);
 		if(targetTile == nullptr)
 		{
 			return;
@@ -156,7 +145,7 @@ void dae::Player::SetBaseTile(GridTile* tile)
 
 	m_pCurrentTile = tile;
 	// TP
-	m_pGameObject->SetPosition(m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y);
+	m_pGameObject.lock()->GetTransform()->SetPosition(Float2{ m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y });
 }
 
 void dae::Player::AddObserver(Observer* observer) const 

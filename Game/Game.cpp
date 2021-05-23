@@ -21,8 +21,40 @@
 #include "WorldGrid.h"
 #include "Player.h"
 #include "GridTile.h"
+#include "TestScene.h"
+#include "TitleScreenScene.h"
 #include "WorldComponent.h"
 
+void dae::Game::Run()
+{
+	dae::Minigin engine{};
+	engine.Window();
+
+	LoadScenes();
+
+	engine.Run();
+}
+
+void dae::Game::LoadScenes()
+{
+	std::shared_ptr<Scene> scene = std::make_shared<TitleScreenScene>();
+
+	SceneManager::GetInstance().AddScene(scene);
+	SceneManager::GetInstance().SetActiveScene(scene->GetName());
+}
+
+void dae::Game::SwitchScene()
+{
+	std::shared_ptr<Scene> scene = std::make_shared<TestScene>();
+
+	SceneManager::GetInstance().AddScene(scene);
+	SceneManager::GetInstance().SetActiveScene(scene->GetName());
+}
+
+
+
+/*
+ 
 dae::Game::Game()
 	: Minigin()
 {
@@ -38,9 +70,9 @@ void dae::Game::Initialize()
 	else
 	{
 		SinglePlayer();
-	}*/
-}
-
+	}
+}*/
+/*
 void dae::Game::Test()
 {
 	

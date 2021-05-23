@@ -1,6 +1,7 @@
 #pragma once
-#include"BaseComponent.h"
+
 #include "Animation.h"
+#include "BaseComponent.h"
 #include "Structs.h"
 
 namespace dae
@@ -13,7 +14,7 @@ namespace dae
 	public:
 		SpriteComponent();
 		
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render() override;
 
 		void AddAnimation(std::shared_ptr<Animation> sprite);

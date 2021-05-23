@@ -94,7 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;C:\Program Files %28x86%29\Visual Leak Detector\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>MiniginPCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -122,7 +122,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y</Com
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;C:\Program Files %28x86%29\Visual Leak Detector\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>MiniginPCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -152,7 +152,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;C:\Program Files %28x86%29\Visual Leak Detector\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>MiniginPCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -184,7 +184,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll" "$(OutputPath)" /R /Y</Com
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;C:\Program Files %28x86%29\Visual Leak Detector\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\imgui-1.81;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>MiniginPCH.h</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -272,7 +272,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="TextComponent.h" />
     <ClInclude Include="TextObject.h" />
     <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WorldComponent.h" />
   </ItemGroup>
@@ -356,7 +358,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WorldComponent.cpp" />
   </ItemGroup>

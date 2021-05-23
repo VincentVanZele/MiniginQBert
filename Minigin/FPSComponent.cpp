@@ -1,20 +1,23 @@
 #include "MiniginPCH.h"
 #include "FPSComponent.h"
 #include "FPSCounter.h"
+#include "GameTime.h"
+#include "ServiceLocator.h"
 #include "TextComponent.h"
+#include "GameObject.h"
 
 void dae::FPSComponent::Initialize()
 {
-	m_pFPSCounter = m_pGameObject->GetComponent<FPSCounter>();
-	m_pTextComponent = m_pGameObject->GetComponent<TextComponent>();
+	m_pFPSCounter = m_pGameObject.lock()->GetComponent<FPSCounter>();
+	m_pTextComponent = m_pGameObject.lock()->GetComponent<TextComponent>();
 }
 
-void dae::FPSComponent::Update(float deltaTime)
+void dae::FPSComponent::Update()
 {
 	if (m_pFPSCounter != nullptr && m_pTextComponent != nullptr)
 	{
 		// refresh rate
-		m_elapsedTime += deltaTime;
+		m_elapsedTime += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
 		if (m_elapsedTime >= m_refreshRate)
 		{
 			// reset

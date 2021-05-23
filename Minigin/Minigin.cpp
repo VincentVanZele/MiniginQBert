@@ -64,8 +64,6 @@ void dae::Minigin::Cleanup()
 void dae::Minigin::Run()
 {
 	srand(static_cast<unsigned int>(time(nullptr)));
-	Window();
-	Initialize();
 
 	const auto audioSystem = new DirectAudioSystem();
 	ServiceLocator::SetAudioSystem(audioSystem);
@@ -82,8 +80,6 @@ void dae::Minigin::Run()
 		float lag = 0.0f;
 		const float timeStep = 0.02f;
 		bool doContinue = true;
-
-		sceneManager.Initialize();
 		
 		while (doContinue)
 		{
@@ -99,12 +95,11 @@ void dae::Minigin::Run()
 				lag -= timeStep;
 			}
 			
-			sceneManager.Update(deltaTime);
+			sceneManager.Update();
 			renderer.Render();
 			gameTime.Update(deltaTime);
 		}
 	}
-
 	
 	Cleanup();
 }

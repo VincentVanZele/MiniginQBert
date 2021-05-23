@@ -1,120 +1,206 @@
 #include "MiniginPCH.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
+#include "TransformComponent.h"
+#include "BaseComponent.h"
 #include "Renderer.h"
+#include "SceneObject.h"
+#include <memory>
+#include <algorithm>
+
+dae::GameObject::GameObject(const Float2& pos, float rot, const Float2& sca)
+	: m_pParentObject(nullptr)
+	, m_pTransform(nullptr)
+{
+	auto trans = new TransformComponent();
+
+	trans->SetPosition(pos);
+	trans->SetRotation(rot);
+	trans->SetScale(sca);
+
+	m_pTransform = trans;
+}
 
 dae::GameObject::~GameObject()
 {
-	for (BaseComponent* pComp : m_pComponents)
+	DestroyObject();
+}
+
+std::shared_ptr<dae::GameObject> dae::GameObject::NewGameObject()
+{
+	auto go = std::make_shared<GameObject>();
+	return go;
+}
+
+void dae::GameObject::AddComponent(BaseComponent* pComp)
+{
+	for (auto component : m_pComponents)
 	{
-		if (pComp != nullptr)
+		if (component == pComp)
 		{
-			delete(pComp);
-			pComp = nullptr;
+			std::cout << "GameObject::AddComponent > GameObject already contains this component!";
+			return;
 		}
 	}
 
-	for (auto pChild : m_pChildren)
+	m_pComponents.push_back(pComp);
+	pComp->m_pGameObject = shared_from_this();
+}
+
+void dae::GameObject::RemoveComponent(BaseComponent* pComp)
+{
+	auto comp = find(m_pComponents.begin(), m_pComponents.end(), pComp);
+
+	if (comp == m_pComponents.end())
 	{
-		if (pChild != nullptr)
+		std::cout << "GameObject::RemoveComponent > Component is not attached to this GameObject!";
+		return;
+	}
+
+	m_pComponents.erase(comp);
+	pComp->m_pGameObject.reset();
+}
+
+std::vector<dae::BaseComponent*> dae::GameObject::GetComponents() const
+{
+	return m_pComponents;
+}
+
+void dae::GameObject::AddChild(std::shared_ptr<GameObject> child)
+{
+	m_pChildren.push_back(child);
+
+	child->SetParent(shared_from_this());
+	child->m_pScene = m_pScene;
+
+	if (m_IsInitialized)
+	{
+		child->Initialize();
+	}
+}
+
+void dae::GameObject::SetParent(std::shared_ptr<GameObject> parent)
+{
+	m_pParentObject = parent;
+}
+
+std::shared_ptr<dae::GameObject> dae::GameObject::GetParent()
+{
+	return m_pParentObject;
+}
+
+void dae::GameObject::SetActive(bool active)
+{
+	if (m_IsActive != active)
+	{
+		m_IsActive = active;
+
+		for (auto pComp : m_pComponents)
 		{
-			delete pChild;
-			pChild = nullptr;
+			pComp->SetActive(active);
 		}
 	}
-};
+}
+
+bool dae::GameObject::GetActive() const
+{
+	return m_IsActive;
+}
 
 void dae::GameObject::Initialize()
 {
-	for (BaseComponent* pComp : m_pComponents)
+	if (m_IsInitialized)
+	{
+		return;
+	}
+
+	for (auto pComp : m_pComponents)
 	{
 		pComp->Initialize();
 	}
 
 	for (auto pChild : m_pChildren)
 	{
-		pChild->Initialize();
+		for (auto pChildComp : pChild->GetComponents())
+		{
+			if (pChildComp->GetActive())
+			{
+				pChildComp->Initialize();
+			}
+		}
 	}
+
+	m_IsInitialized = true;
 }
 
-void dae::GameObject::Update(float deltaTime)
+void dae::GameObject::Update()
 {
-	for (BaseComponent* pComp : m_pComponents)
+	for (auto pComp : m_pComponents)
 	{
-		pComp->Update(deltaTime);
+		if (pComp->GetActive())
+		{
+			if (!pComp->m_IsInitialized)
+			{
+				pComp->Initialize();
+				pComp->m_IsInitialized = true;
+			}
+
+			pComp->Update();
+		}
 	}
+
 	for (auto pChild : m_pChildren)
 	{
-		pChild->Update(deltaTime);
+		for (auto pChildComp : pChild->GetComponents())
+		{
+			if (pChildComp->GetActive())
+			{
+				if (!pChildComp->m_IsInitialized)
+				{
+					pChildComp->Initialize();
+					pChildComp->m_IsInitialized = true;
+				}
+
+				pChildComp->Update();
+			}
+		}
 	}
 }
 
 void dae::GameObject::Render() const
 {
-	for (BaseComponent* pComp : m_pComponents)
+	for (auto pComp : m_pComponents)
 	{
 		pComp->Render();
 	}
 
-	if (m_pTexture)
+	for (auto pChild : m_pChildren)
 	{
-		const auto& pos = m_transform.GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTexture, pos._x, pos._y);
-	}
-
-	for (auto child : m_pChildren)
-	{
-		child->Render();
-	}
-}
-
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
-}
-
-void dae::GameObject::SetPosition(float x, float y)
-{
-	m_transform.SetPosition(x, y, 0.0f);
-}
-
-dae::Float3 dae::GameObject::GetPosition() const
-{
-	return m_transform.GetPosition();
-}
-
-void dae::GameObject::AddComponent(BaseComponent* pComp)
-{
-	for (BaseComponent* component : m_pComponents)
-	{
-		if (component == pComp)
+		for (auto pChildComp : pChild->GetComponents())
 		{
-			std::cout << "Already has this component\n";
-			return;
+			pChildComp->Render();
 		}
 	}
 
-	m_pComponents.push_back(pComp);
-	pComp->m_pGameObject = this;
-
 }
 
-void dae::GameObject::RemoveComponent(BaseComponent* pComp)
+void dae::GameObject::Destroy()
 {
-	const auto it = find(m_pComponents.begin(), m_pComponents.end(), pComp);
-
-	if (it == m_pComponents.end())
+	for (auto pComp : m_pComponents)
 	{
-		std::cout << "No such Component\n";
-		return;
+		pComp->Destroy();
 	}
-
-	m_pComponents.erase(it);
-	pComp->m_pGameObject = nullptr;
 }
 
-void dae::GameObject::AddChild(GameObject* pChild)
+void dae::GameObject::DestroyObject()
 {
-	//pChild->m_pParent = this;
-	m_pChildren.push_back(pChild);
+	delete m_pTransform;
+
+	for (auto comps : m_pComponents)
+	{
+		delete comps;
+	}
 }
+
+
+
