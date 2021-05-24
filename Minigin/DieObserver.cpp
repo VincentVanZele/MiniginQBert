@@ -15,4 +15,8 @@ void dae::DieObserver::Notify(std::shared_ptr<GameObject> gO, Event event)
 			// achievement code ...
 		}
 	}
+	else if(event == Event::Killed)
+	{
+		
+	}
 }

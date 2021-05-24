@@ -13,7 +13,7 @@ namespace dae
 		Animation(std::shared_ptr<Texture2D> tex, const std::string& name, int nbrFrames);
 
 		void Render() const;
-		void Update();
+		void Update(float& deltaT);
 
 		void SetTexture(std::shared_ptr<Texture2D> tex);
 		Texture2D& GetTexture() const;
@@ -44,7 +44,7 @@ namespace dae
 		int m_nbrFrames, m_currFrame;
 		float m_FrameDeltatime = 0.333f;
 
-		Float2 m_Pos;
+		Float2 m_Pos{50,50};
 		bool m_Loop = true;
 	};
 }

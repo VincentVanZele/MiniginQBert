@@ -39,7 +39,7 @@ namespace dae
 		SDL_Renderer* m_Renderer = nullptr;
 		SDL_Window* m_Window = nullptr;
 		
-		float m_Scale{};
+		float m_Scale{1};
 		bool m_ShowDemo = true;
 	};
 }

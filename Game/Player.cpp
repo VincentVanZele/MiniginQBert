@@ -28,7 +28,31 @@ dae::Player::~Player()
 
 void dae::Player::Initialize()
 {
-	m_pSprite = m_pGameObject.lock()->GetComponent<SpriteComponent>();
+	m_pSprite = new SpriteComponent();
+	// Left
+	auto tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q_BotLeft.png");
+	auto sequence = std::make_shared<Animation>(tex, "Left", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Right
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q_TopRight.png");
+	sequence = std::make_shared<Animation>(tex, "Right", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Up
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q_TopLeft.png");
+	sequence = std::make_shared<Animation>(tex, "Up", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Down
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q_BotRight.png");
+	sequence = std::make_shared<Animation>(tex, "Down", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	m_pSprite->SetActiveAnimation("Right");
+
+	this->AddComponent(m_pSprite);
+	
 	m_pTexture = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert.png");
 	
 	// 0 -> first controller
@@ -37,10 +61,10 @@ void dae::Player::Initialize()
 		m_ControllerId = 0;
 	}
 
-	InputManager::GetInstance().AddCommand(new MoveUp(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadUpVK);
-	InputManager::GetInstance().AddCommand(new MoveDown(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadDownVK);
-	InputManager::GetInstance().AddCommand(new MoveLeft(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadLeftVK);
-	InputManager::GetInstance().AddCommand(new MoveRight(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::DpadRightVK);
+	InputManager::GetInstance().AddCommand(new MoveUp(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::YVK);
+	InputManager::GetInstance().AddCommand(new MoveDown(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::AVK);
+	InputManager::GetInstance().AddCommand(new MoveLeft(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::XVK);
+	InputManager::GetInstance().AddCommand(new MoveRight(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::BVK);
 }
 
 void dae::Player::Update()
@@ -81,61 +105,77 @@ void dae::Player::Update()
 		if (lengthResult.Length() <= 2.f)
 		{
 			m_needMoveUpdate = false;
+			m_IsMoving = false;
+			m_pCurrentTile->ToggleState();
+			UpdateTextures(TileConnections::Default);
+			ToggleMoveRestriction();
 		}
 	}
+
+	m_pSprite->GetActiveAnimation().SetPos(this->GetTransform()->GetPosition());
 }
 
 void dae::Player::Render()
 {
+	
 	// Texture
-	if (m_pTexture != nullptr)
+	/*if (m_pTexture != nullptr)
 	{
 		const auto goPos = m_pGameObject.lock()->GetTransform()->GetPosition();
 		Renderer::GetInstance().RenderTexture(*m_pTexture, goPos._x, goPos._y);
-	}
+	}*/
 }
 
 void dae::Player::MoveTo(TileConnections connection)
 {
 	if (m_pCurrentTile->HasConnectedTileAt(connection))
 	{
+		ToggleMoveRestriction();
 		auto targetTile = m_pCurrentTile->GetConnectedTileAt(connection);
 		if(targetTile == nullptr)
 		{
 			return;
 		}
 
-		m_pCurrentTile = targetTile;
+		m_pCurrentTile = targetTile;		
+		m_TargetPosition = targetTile->GetCenter();
 
 		m_IsMoving = true; // change texture
-		m_TargetPosition = targetTile->GetCenter();
 		
-	}
+		UpdateTextures(connection);
 
-	// Modify 
-	UpdateTextures(connection);
+		m_needMoveUpdate = true; // update
+	}
 }
 
-void dae::Player::UpdateTextures(TileConnections state)
+void dae::Player::UpdateTextures(TileConnections )
 {
-	auto resourceManager = ServiceLocator::GetResourceManager();
+	/*auto resourceManager = ServiceLocator::GetResourceManager();
 	
 	// no need to check for nullptr, has been done in MoveTo
 	switch (state)
 	{
+	case TileConnections::Default:
+		m_pTexture = resourceManager->GetInstance().LoadTexture("QBert.png");
+		break;
 	case TileConnections::Up: // Top left
-		m_pTexture = resourceManager->GetInstance().LoadTexture("Q_TopLeft.png");
+		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_TopLeft.png");
+		m_pSprite->SetActiveAnimation("Right");
 		break;
 	case TileConnections::Down: // Bot right
-		m_pTexture = resourceManager->GetInstance().LoadTexture("Q_BotRight.png");
+		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_BotRight.png");
+		m_pSprite->SetActiveAnimation("Right");
 		break;
 	case TileConnections::Left: // Bot left
-		m_pTexture = resourceManager->GetInstance().LoadTexture("Q_BotLeft.png");
+		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_BotLeft.png");
+		m_pSprite->SetActiveAnimation("Right");
 		break;
 	case TileConnections::Right: // Top right
-		m_pTexture = resourceManager->GetInstance().LoadTexture("Q_TopRight.png");
+		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_TopRight.png");
+		m_pSprite->SetActiveAnimation("Right");
 		break;
-	}
+	}*/
+
 }
 
 void dae::Player::SetBaseTile(GridTile* tile)

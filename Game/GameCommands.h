@@ -15,7 +15,6 @@ namespace dae
 
 		void Execute() override;
 
-		Input _cmdInput;
 	};
 
 	class MoveDown : public BaseCommand
@@ -26,7 +25,6 @@ namespace dae
 
 		void Execute() override;
 
-		Input _cmdInput;
 	};
 
 	class MoveLeft : public BaseCommand
@@ -37,7 +35,6 @@ namespace dae
 
 		void Execute() override;
 
-		Input _cmdInput;
 	};
 
 	class MoveRight : public BaseCommand
@@ -47,7 +44,5 @@ namespace dae
 		~MoveRight() = default;
 
 		void Execute() override;
-
-		Input _cmdInput;
 	};
 }

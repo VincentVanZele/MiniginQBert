@@ -235,6 +235,12 @@
     <ClInclude Include="TextureComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="FlamePlot.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -365,6 +371,9 @@
     </ClCompile>
     <ClCompile Include="TextureComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="FlamePlot.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

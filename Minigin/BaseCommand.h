@@ -3,12 +3,15 @@
 
 namespace dae
 {
+	class Player;
+
 	class BaseCommand
 	{
 	public:
-		BaseCommand(int controllerID, RequiredKeyState state)
+		BaseCommand(int controllerID, RequiredKeyState state, Player* player)
 			: m_controllerId{ controllerID }
 			, m_keyState{ state }
+			, m_player{player}
 		{
 		}
 		virtual ~BaseCommand() = default;
@@ -33,9 +36,19 @@ namespace dae
 			return m_keyState;
 		}
 
+		void SetPlayer(Player* player)
+		{
+			m_player = player;
+		}
+		Player* GetPlayer() const
+		{
+			return m_player;
+		}
+
 	protected:
 		int m_controllerId = 0;
 
 		RequiredKeyState m_keyState = RequiredKeyState::Default;
+		Player* m_player;
 	};
 }

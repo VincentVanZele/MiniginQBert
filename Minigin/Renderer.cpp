@@ -38,7 +38,7 @@ void dae::Renderer::Render() const
 
 	if (m_ShowDemo)
 	{
-		ImGui::ShowDemoWindow();
+		ImGui::ShowMetricsWindow();
 	}
 
 	ImGui::Render();

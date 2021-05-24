@@ -1,16 +1,13 @@
 #include "pch.h"
 #include "GameCommands.h"
 #include "GameObject.h"
+#include "GridTile.h"
 #include "Player.h"
 
 dae::MoveUp::MoveUp(int ID, RequiredKeyState state, Player* gO)
-	: BaseCommand(ID, state)
+	: BaseCommand(ID, state, gO)
 {
-	if (gO)
-	{
-		_cmdInput = gO->GetInput();
-	}
-	else
+	if (gO == nullptr)
 	{
 		std::cout << "MoveUp Command: GameObject has no PlayerController component.\n";
 	}
@@ -18,17 +15,16 @@ dae::MoveUp::MoveUp(int ID, RequiredKeyState state, Player* gO)
 
 void dae::MoveUp::Execute()
 {
-	_cmdInput = Input::Up;
+	if (!m_player->GetMoveRestriction())
+	{
+		m_player->MoveTo(TileConnections::Up);
+	}
 }
 
 dae::MoveDown::MoveDown(int ID, RequiredKeyState state, Player* gO)
-	: BaseCommand(ID, state)
+	: BaseCommand(ID, state, gO)
 {
-	if (gO)
-	{
-		_cmdInput = gO->GetInput();
-	}
-	else
+	if (gO == nullptr)
 	{
 		std::cout << "MoveDown Command: GameObject has no PlayerController component.\n";
 	}
@@ -36,36 +32,33 @@ dae::MoveDown::MoveDown(int ID, RequiredKeyState state, Player* gO)
 
 void dae::MoveDown::Execute()
 {
-	_cmdInput = Input::Down;
+	if (!m_player->GetMoveRestriction())
+	{
+		m_player->MoveTo(TileConnections::Down);
+	}
 }
 
 dae::MoveLeft::MoveLeft(int ID, RequiredKeyState state, Player* gO)
-	: BaseCommand(ID, state)
+	: BaseCommand(ID, state, gO)
 {
-	if (gO)
-	{
-		_cmdInput = gO->GetInput();
-	}
-	else
+	if (gO == nullptr)
 	{
 		std::cout << "MoveLeft Command: GameObject has no PlayerController component.\n";
-
 	}
 }
 
 void dae::MoveLeft::Execute()
 {
-	_cmdInput = Input::Left;
+	if (!m_player->GetMoveRestriction())
+	{
+		m_player->MoveTo(TileConnections::Left);
+	}
 }
 
 dae::MoveRight::MoveRight(int ID, RequiredKeyState state, Player* gO)
-	: BaseCommand(ID, state)
+	: BaseCommand(ID, state, gO)
 {
-	if (gO)
-	{
-		_cmdInput = gO->GetInput();
-	}
-	else
+	if (gO == nullptr)
 	{
 		std::cout << "MoveRight Command: GameObject has no PlayerController component.\n";
 	}
@@ -73,6 +66,9 @@ dae::MoveRight::MoveRight(int ID, RequiredKeyState state, Player* gO)
 
 void dae::MoveRight::Execute()
 {
-	_cmdInput = Input::Right;
+	if (!m_player->GetMoveRestriction())
+	{
+		m_player->MoveTo(TileConnections::Right);
+	}
 }
 

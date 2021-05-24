@@ -41,9 +41,19 @@ void dae::GridTile::Update( )
 
 void dae::GridTile::Render()
 {
-	if (m_pTextDefault != nullptr)
+	if (m_state == TileState::Tile)
 	{
-		Renderer::GetInstance().RenderTexture(*m_pTextDefault, m_tileCenter._x, m_tileCenter._y);
+		if (m_pTextDefault != nullptr)
+		{
+			Renderer::GetInstance().RenderTexture(*m_pTextDefault, m_tileCenter._x, m_tileCenter._y);
+		}
+	}
+	else if(m_state == TileState::ChangedTile)
+	{
+		if (m_pTextChanged != nullptr)
+		{
+			Renderer::GetInstance().RenderTexture(*m_pTextChanged, m_tileCenter._x, m_tileCenter._y);
+		}
 	}
 }
 

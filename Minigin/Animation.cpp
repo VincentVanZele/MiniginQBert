@@ -13,9 +13,8 @@ dae::Animation::Animation(std::shared_ptr<Texture2D> tex, const std::string& nam
 {
 }
 
-void dae::Animation::Update()
+void dae::Animation::Update(float& deltaT)
 {
-	auto deltaT = ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
 	if (m_FrameDeltatime < 0)
 	{
 		return;

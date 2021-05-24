@@ -13,7 +13,7 @@ namespace dae
 
 	enum class TileConnections
 	{
-		Up, Down, Left, Right
+		Up, Down, Left, Right, Default
 	};
 
 	class GridTile : public BaseComponent
@@ -69,6 +69,11 @@ namespace dae
 			m_tileCenter = center;
 		}
 
+		void ToggleState()
+		{
+			if (m_state == TileState::Tile)
+				m_state = TileState::ChangedTile;
+		}
 		TileState GetTileState() const
 		{
 			return m_state;

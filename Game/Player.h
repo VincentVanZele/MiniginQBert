@@ -77,6 +77,18 @@ namespace dae
 			return m_lives;
 		}
 
+		void ToggleMoveRestriction()
+		{
+			if (m_moveRestriction)
+				m_moveRestriction = false;
+			else
+				m_moveRestriction = true;
+		}
+		bool GetMoveRestriction() const
+		{
+			return m_moveRestriction;
+		}
+
 		bool m_hasDied = false;
 		
 	private:
@@ -85,6 +97,7 @@ namespace dae
 		int m_ControllerId{};
 		Input m_Input{};
 		Subject* m_pSubject = nullptr;
+		std::shared_ptr<GameObject> m_gameObject;
 
 		// Graphics
 		SpriteComponent* m_pSprite = nullptr;
@@ -92,6 +105,8 @@ namespace dae
 
 		// Movement
 		GridTile* m_pCurrentTile;
+
+		bool m_moveRestriction{ false };
 		bool m_needMoveUpdate{ false };
 
 		const float m_WalkSpeed = 80.0f;

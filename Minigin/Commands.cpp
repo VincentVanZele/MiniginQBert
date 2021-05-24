@@ -8,6 +8,7 @@
 #include "PlayerComponent.h"
 #include "ServiceLocator.h"
 
+/*
 dae::Die::Die(int ID, RequiredKeyState state, bool& hasDied)
 	: BaseCommand(ID, state)
 	, _hasDied(hasDied)
@@ -46,4 +47,4 @@ void dae::Kill::Execute()
 	_hasKilled = true;
 	std::cout << "Killed Enemy !\n";
 	ServiceLocator::GetAudioSystem().AddAudio("sound.wav", 1, true);
-}
+}*/

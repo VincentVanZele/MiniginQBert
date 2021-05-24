@@ -18,7 +18,7 @@ void dae::SpriteComponent::Update()
 {
 	m_deltaTime += GameTime::GetInstance().GetDeltaTime();
 
-	m_ActiveSprite->Update();
+	m_ActiveSprite->Update(m_deltaTime);
 }
 
 void dae::SpriteComponent::Render()
