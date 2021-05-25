@@ -15,7 +15,20 @@ namespace dae
 		void RemoveAllObservers();
 		void DeleteAllObservers();
 
-		void Notify(std::shared_ptr<GameObject> gameObject, Event event);
+		void Notify(Event event);
+
+		// Template
+		template <class T>
+		T* GetObserver()
+		{
+			const type_info& ti = typeid(T);
+			for (Observer* obs : m_Observers)
+			{
+				if (obs && typeid(*obs) == ti)
+					return static_cast<T*>(obs);
+			}
+			return nullptr;
+		}
 
 	private:
 		std::vector<Observer*> m_Observers{};

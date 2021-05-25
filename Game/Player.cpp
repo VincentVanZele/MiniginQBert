@@ -10,13 +10,17 @@
 #include "ServiceLocator.h"
 #include "GameCommands.h"
 #include "GridTile.h"
+#include "ScoreObserver.h"
 #include "Subject.h"
 #include "TransformComponent.h"
 
-dae::Player::Player()
+dae::Player::Player(GridTile* spawn)
 	: m_pTexture(nullptr)
-	, m_pCurrentTile(nullptr)
+	, m_pSpawnTile(spawn)
+	, m_pCurrentTile(spawn)
+	, m_pSubject(new Subject())
 {
+	
 }
 
 dae::Player::~Player()
@@ -29,9 +33,15 @@ dae::Player::~Player()
 void dae::Player::Initialize()
 {
 	m_pSprite = new SpriteComponent();
+
 	// Left
 	auto tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q_BotLeft.png");
 	auto sequence = std::make_shared<Animation>(tex, "Left", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Idle
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert.png");
+	sequence = std::make_shared<Animation>(tex, "Idle", 2);
 	m_pSprite->AddAnimation(sequence);
 
 	// Right
@@ -49,7 +59,7 @@ void dae::Player::Initialize()
 	sequence = std::make_shared<Animation>(tex, "Down", 2);
 	m_pSprite->AddAnimation(sequence);
 
-	m_pSprite->SetActiveAnimation("Right");
+	m_pSprite->SetActiveAnimation("Idle");
 
 	this->AddComponent(m_pSprite);
 	
@@ -60,6 +70,8 @@ void dae::Player::Initialize()
 	{
 		m_ControllerId = 0;
 	}
+
+	TeleportToTile(m_pSpawnTile);
 
 	InputManager::GetInstance().AddCommand(new MoveUp(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::YVK);
 	InputManager::GetInstance().AddCommand(new MoveDown(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::AVK);
@@ -85,7 +97,7 @@ void dae::Player::Update()
 	if (m_hasDied)
 	{
 		--m_lives;
-		m_pSubject->Notify(GetGameObject(), Event::Died);
+		m_pSubject->Notify(Event::Died);
 		m_hasDied = false;
 	}
 
@@ -104,27 +116,40 @@ void dae::Player::Update()
 		const Float2 lengthResult = Float2{ x,y };
 		if (lengthResult.Length() <= 2.f)
 		{
+			if(m_pCurrentTile->GetTileState() == TileState::Disk)
+			{
+				TeleportToTile(m_pSpawnTile);
+			}
+			
 			m_needMoveUpdate = false;
 			m_IsMoving = false;
-			m_pCurrentTile->ToggleState();
-			UpdateTextures(TileConnections::Default);
+			if(m_pCurrentTile->ToggleState())
+			{
+				m_pSubject->Notify(Event::TileChanged);
+			}
+			m_pCurrentTile->SetHasEntity(true);
 			ToggleMoveRestriction();
 		}
 	}
 
-	m_pSprite->GetActiveAnimation().SetPos(this->GetTransform()->GetPosition());
+	const Float2 animationPos = Float2
+	{ this->GetTransform()->GetPosition()._x + (float)(m_pSprite->GetActiveAnimation().GetTexture().GetTextWidth() / 2.f),
+		this->GetTransform()->GetPosition()._y - (float)(m_pSprite->GetActiveAnimation().GetTexture().GetTextHeight() / 2.f)
+	};
+	
+	m_pSprite->GetActiveAnimation().SetPos(animationPos);
 }
 
 void dae::Player::Render()
 {
 	
-	// Texture
-	/*if (m_pTexture != nullptr)
-	{
-		const auto goPos = m_pGameObject.lock()->GetTransform()->GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_pTexture, goPos._x, goPos._y);
-	}*/
 }
+
+void dae::Player::Die()
+{
+	TeleportToTile(m_pSpawnTile);
+}
+
 
 void dae::Player::MoveTo(TileConnections connection)
 {
@@ -137,6 +162,8 @@ void dae::Player::MoveTo(TileConnections connection)
 			return;
 		}
 
+		m_pCurrentTile->SetHasEntity(false);
+		
 		m_pCurrentTile = targetTile;		
 		m_TargetPosition = targetTile->GetCenter();
 
@@ -148,42 +175,38 @@ void dae::Player::MoveTo(TileConnections connection)
 	}
 }
 
-void dae::Player::UpdateTextures(TileConnections )
+void dae::Player::UpdateTextures(TileConnections state)
 {
-	/*auto resourceManager = ServiceLocator::GetResourceManager();
+	auto resourceManager = ServiceLocator::GetResourceManager();
 	
 	// no need to check for nullptr, has been done in MoveTo
 	switch (state)
 	{
 	case TileConnections::Default:
-		m_pTexture = resourceManager->GetInstance().LoadTexture("QBert.png");
+		m_pSprite->SetActiveAnimation("Idle");
 		break;
 	case TileConnections::Up: // Top left
-		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_TopLeft.png");
-		m_pSprite->SetActiveAnimation("Right");
+		m_pSprite->SetActiveAnimation("Up");
 		break;
 	case TileConnections::Down: // Bot right
-		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_BotRight.png");
-		m_pSprite->SetActiveAnimation("Right");
+		m_pSprite->SetActiveAnimation("Down");
 		break;
 	case TileConnections::Left: // Bot left
-		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_BotLeft.png");
-		m_pSprite->SetActiveAnimation("Right");
+		m_pSprite->SetActiveAnimation("Left");
 		break;
 	case TileConnections::Right: // Top right
-		//m_pTexture = resourceManager->GetInstance().LoadTexture("Q_TopRight.png");
 		m_pSprite->SetActiveAnimation("Right");
 		break;
-	}*/
-
+	}
 }
 
-void dae::Player::SetBaseTile(GridTile* tile)
+void dae::Player::TeleportToTile(GridTile* tile)
 {
 	if (tile == nullptr)
 		return;
 
 	m_pCurrentTile = tile;
+	m_pCurrentTile->SetHasEntity(true);
 	// TP
 	m_pGameObject.lock()->GetTransform()->SetPosition(Float2{ m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y });
 }

@@ -17,7 +17,7 @@ namespace dae
 	{
 	public:
 		// Player 
-		Player();
+		Player(GridTile* spawn);
 		~Player() override;
 
 		Player(Player const& other) = delete;
@@ -45,7 +45,7 @@ namespace dae
 		}
 
 		void MoveTo(TileConnections connection);
-		void SetBaseTile(GridTile* tile);
+		void TeleportToTile(GridTile* tile);
 
 		// Textures
 		void UpdateTextures(TileConnections state);
@@ -55,6 +55,8 @@ namespace dae
 		void RemoveObserver(Observer* observer) const;
 
 		// Lives
+		void Die();
+		
 		void SetHasDied(bool died)
 		{
 			m_hasDied = died;
@@ -89,6 +91,16 @@ namespace dae
 			return m_moveRestriction;
 		}
 
+		Subject* GetSubject() const
+		{
+			return m_pSubject;
+		}
+
+		int GetScore() 
+		{
+			return m_score;
+		}
+
 		bool m_hasDied = false;
 		
 	private:
@@ -105,6 +117,7 @@ namespace dae
 
 		// Movement
 		GridTile* m_pCurrentTile;
+		GridTile* m_pSpawnTile;
 
 		bool m_moveRestriction{ false };
 		bool m_needMoveUpdate{ false };
@@ -114,6 +127,7 @@ namespace dae
 		bool m_IsMoving{ false };
 
 		// Other
-		int m_lives = 10;	
+		int m_lives = 10;
+		int m_score = 0;
 	};
 }

@@ -4,6 +4,8 @@
 
 namespace dae
 {
+	class ScoreObserver;
+	class TextComponent;
 	class WorldGrid;
 	class Player;
 
@@ -18,7 +20,8 @@ namespace dae
 	private:
 		bool _isCoop = true;
 
-		std::shared_ptr<GameObject> yep;
+		ScoreObserver* m_obs{ nullptr };
+		TextComponent* m_score{ nullptr };
 		WorldGrid* m_world{ nullptr };
 		Player* m_player{ nullptr };
 	};

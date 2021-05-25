@@ -1,11 +1,13 @@
 #pragma once
 #include <BaseComponent.h>
-#include "SpriteComponent.h"
+#include <Structs.h>
+
 #include "Subject.h"
 
 namespace dae
 {
 	class GridTile;
+	class SpriteComponent;
 	
 	// Replacement of WorldComponent
 	class WorldGrid : public BaseComponent
@@ -28,14 +30,15 @@ namespace dae
 
 		void AddObserver(Observer* observer) const;
 		void RemoveObserver(Observer* observer) const;
-
-		bool m_hasKilled = false;
-		bool m_hasChangedTile = false;
 		
 	private:
+		
 		std::vector<GridTile*> m_pGridTiles;
 		Float2 m_gridPosition{};
-		int m_width;
+		SpriteComponent* m_pSprite1 = nullptr;
+		SpriteComponent* m_pSprite2 = nullptr;
+
+		int m_width, m_disk1{21}, m_disk2{27}, m_diskOffset{15};
 		
 		Subject* m_pSubject = nullptr;
 	};

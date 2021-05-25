@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "GridTile.h"
 
+#include "GameObject.h"
+#include "SpriteComponent.h"
+#include "Animation.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "ServiceLocator.h"
@@ -13,6 +16,7 @@ dae::GridTile::GridTile(Float2 center)
 
 	m_pTextDefault = resourceManager->GetInstance().LoadTexture("DefaultTile.png");
 	m_pTextChanged = resourceManager->GetInstance().LoadTexture("ChangedTile.png");
+
 }
 
 void dae::GridTile::Initialize()

@@ -50,3 +50,4 @@ void dae::ScoreComponent::Render()
 {
 	
 }
+

@@ -31,10 +31,10 @@ void dae::Subject::DeleteAllObservers()
 	RemoveAllObservers();
 }
 
-void dae::Subject::Notify(std::shared_ptr<GameObject> gameObject, Event event)
+void dae::Subject::Notify(Event event)
 {
 	for (Observer* observer : m_Observers)
 	{
-		observer->Notify(gameObject, event);
+		observer->Notify(event);
 	}
 }

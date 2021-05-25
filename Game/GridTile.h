@@ -6,9 +6,11 @@
 
 namespace dae
 {
+	class SpriteComponent;
+
 	enum class TileState
 	{
-		Spawn, Wall, Tile, ChangedTile
+		Spawn, Disk, Tile, ChangedTile
 	};
 
 	enum class TileConnections
@@ -69,10 +71,14 @@ namespace dae
 			m_tileCenter = center;
 		}
 
-		void ToggleState()
+		bool ToggleState()
 		{
 			if (m_state == TileState::Tile)
+			{
 				m_state = TileState::ChangedTile;
+				return true;
+			}
+			return false;
 		}
 		TileState GetTileState() const
 		{
@@ -87,6 +93,15 @@ namespace dae
 		{
 			return m_pTextDefault;
 		}
+
+		void SetHasEntity(bool entity)
+		{
+			m_hasEntity = entity;
+		}
+		bool GetHasEntity() const
+		{
+			return m_hasEntity;
+		}
 		
 	private:
 		Float2 m_tileCenter{};
@@ -98,6 +113,7 @@ namespace dae
 
 		bool m_NeedUpdate = true;
 		bool m_edgecaseRow{ false }, m_edgecaseCol{ false };
+		bool m_hasEntity = false;
 	};
 
 }

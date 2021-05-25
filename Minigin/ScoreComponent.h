@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
+#include "Structs.h"
 
 namespace dae
 {
@@ -22,10 +23,6 @@ namespace dae
 		void Initialize() override;
 		void Update() override;
 		void Render() override;
-
-		// no need for subjects -> just need observers values
-		//void AddObserver(Observer* observer);
-		//void RemoveObserver(Observer* observer);
 	
 	private:
 		int m_Score{};

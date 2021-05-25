@@ -3,6 +3,11 @@
 #include "GridTile.h"
 #include "GameObject.h"
 
+#include "ServiceLocator.h"
+#include "ResourceManager.h"
+#include "Animation.h"
+#include "SpriteComponent.h"
+
 #include "EMath.h"
 #include "Utils.h"
 #include "Enums.h"
@@ -32,13 +37,16 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 			m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
 
 			// Edge cases
-			if (i == m_width)
+			if ((i != 5 && j != 0) || (i != 5 && j != i - 1))
 			{
-				m_pGridTiles.back()->SetEdgeCaseRow(true);
-			}
-			if (j == 0 || j == i - 1)
-			{
-				m_pGridTiles.back()->SetEdgeCaseCol(true);
+				if (i == m_width)
+				{
+					m_pGridTiles.back()->SetEdgeCaseRow(true);
+				}
+				if (j == 0 || j == i - 1)
+				{
+					m_pGridTiles.back()->SetEdgeCaseCol(true);
+				}
 			}
 
 			go->AddChild(newTile);
@@ -83,6 +91,57 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 		}
 
 	}
+
+	// Disk 1
+	m_pSprite1 = new SpriteComponent();
+	auto tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Disk.png");
+	auto sequence = std::make_shared<Animation>(tex, "Disk", 4);
+	m_pSprite1->AddAnimation(sequence);
+	m_pSprite1->SetActiveAnimation("Disk");
+	
+	// special cases 21
+	auto newTile = std::make_shared<GameObject>();
+	newTile->AddComponent(new GridTile(tempPos));
+	newTile->GetComponent<GridTile>()->SetTileState(TileState::Disk);
+
+	m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
+	Float2 newPos = Float2{ m_pGridTiles[m_disk1]->GetCenter()._x + m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2, m_pGridTiles[m_disk1]->GetCenter()._y - m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f };
+
+	m_pGridTiles.back()->SetCenter(newPos);
+	m_pGridTiles.back()->SetEdgeCaseRow(true);
+	m_pGridTiles.back()->SetEdgeCaseCol(true);
+	
+	m_pGridTiles[m_disk1]->AddTileConnections(m_pGridTiles.back(), TileConnections::Right);
+
+	newTile->AddComponent(m_pSprite1);
+	m_pSprite1->GetActiveAnimation().SetPos(Float2{ newTile->GetComponent<GridTile>()->GetCenter()._x + m_diskOffset,newTile->GetComponent<GridTile>()->GetCenter()._y + m_diskOffset });
+	go->AddChild(newTile);
+
+	// Disk 2
+	m_pSprite2 = new SpriteComponent();
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Disk.png");
+	sequence = std::make_shared<Animation>(tex, "Disk", 4);
+	m_pSprite2->AddAnimation(sequence);
+	m_pSprite2->SetActiveAnimation("Disk");
+	
+	// 27
+	newTile = std::make_shared<GameObject>();
+	newTile->AddComponent(new GridTile(tempPos));
+	newTile->GetComponent<GridTile>()->SetTileState(TileState::Disk);
+
+	m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
+	newPos = Float2{ m_pGridTiles[m_disk2]->GetCenter()._x - m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2, m_pGridTiles[m_disk2]->GetCenter()._y - m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f };
+
+	m_pGridTiles.back()->SetCenter(newPos);
+	m_pGridTiles.back()->SetEdgeCaseRow(true);
+	m_pGridTiles.back()->SetEdgeCaseCol(true);
+
+	m_pGridTiles[m_disk2]->AddTileConnections(m_pGridTiles.back(), TileConnections::Up);
+
+	newTile->AddComponent(m_pSprite2);
+	m_pSprite2->GetActiveAnimation().SetPos(Float2{ newTile->GetComponent<GridTile>()->GetCenter()._x + m_diskOffset,newTile->GetComponent<GridTile>()->GetCenter()._y + m_diskOffset });
+	go->AddChild(newTile);
+	
 }
 
 dae::WorldGrid::~WorldGrid()
@@ -129,46 +188,7 @@ void dae::WorldGrid::RemoveObserver(Observer* observer) const
 
 void dae::WorldGrid::Update()
 {	
-	if (m_hasKilled)
-	{
-		m_pSubject->Notify(GetGameObject(), Event::Killed);
-		m_hasKilled = false;
-	}
-	if (m_hasChangedTile)
-	{
-		m_pSubject->Notify(GetGameObject(), Event::TileChanged);
-		m_hasChangedTile = false;
-	}
-	
-	/*for (const auto& pTile : m_pGridTiles)
-	{
-		auto* tileInfo = pTile.lock()->GetComponent<GridTileInfo>();
-		if (tileInfo != nullptr)
-		{
-			auto tile = tileInfo->GetTile();
 
-			if (tile.GetTileState() != TileState::Wall)
-			{
-				Float2 center = tileInfo->GetTile().GetCenter();
-				Elite::FPoint2 tileCenter = Elite::FPoint2(center._x, center._y);
-				
-				Elite::FVector2 pos = Elite::FVector2(GetGameObject()->GetPosition()._x, GetGameObject()->GetPosition()._y);
-				pos.x += 20;
-				pos.y -= 20;
-
-				Elite::FPoint2 playerPos = Elite::FPoint2(pos);
-
-				if (Elite::SqrDistance(tileCenter, playerPos) <= Elite::Square(m_MinDistance))
-				{
-					auto* pSpriteComponent = pTile.lock()->GetComponent<SpriteComponent>();
-					pSpriteComponent->SetActiveAnimation("ChangedTile");
-
-					m_hasChangedTile = true;
-					tileInfo->GetTile().SetTileState(TileState::ChangedTile);
-				}
-			}		
-		}
-	}*/
 }
 
 void dae::WorldGrid::Render()
