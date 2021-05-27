@@ -3,14 +3,14 @@
 
 namespace dae
 {
-	class PlayerComponent;
+	class DieObserver;
 	class TextComponent;
 
 	class LivesComponent : public BaseComponent
 	{
 	public:
-		LivesComponent(PlayerComponent* comp);
-		virtual ~LivesComponent() = default;
+		LivesComponent(DieObserver* comp);
+		~LivesComponent();
 
 		LivesComponent(const LivesComponent& other) = delete;
 		LivesComponent(LivesComponent&& other) noexcept = delete;
@@ -22,11 +22,11 @@ namespace dae
 		void Render() override;
 
 	private:
+		int m_lives{};
+		
 		TextComponent* m_pTextComponent = nullptr;
-		PlayerComponent* m_pPlayerComponent = nullptr;
+		DieObserver* m_pDieObserver = nullptr;
 
-		float m_refreshRate = 0.5f;
-		float m_elapsedTime = 0;
 	};
 
 }

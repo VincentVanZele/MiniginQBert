@@ -3,6 +3,7 @@
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include <iostream>
+
 #include "Minigin.h"
 #include "Game.h"
 

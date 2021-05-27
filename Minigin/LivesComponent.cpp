@@ -1,42 +1,51 @@
 #include "MiniginPCH.h"
 #include "LivesComponent.h"
 
+
+#include "DieObserver.h"
 #include "TextComponent.h"
 #include "PlayerComponent.h"
 #include "ServiceLocator.h"
 #include "GameTime.h"
 #include "GameObject.h"
+#include "../Game/Player.h"
 
-dae::LivesComponent::LivesComponent(PlayerComponent* comp)
-	:m_pPlayerComponent(comp)
+dae::LivesComponent::LivesComponent(DieObserver* comp)
+	:m_pDieObserver(comp)
 {
 }
 
 void dae::LivesComponent::Initialize()
 {
-	m_pTextComponent = m_pGameObject.lock()->GetComponent<TextComponent>();
+	m_pTextComponent = GetGameObject()->GetComponent<TextComponent>();
 
 	// base text
 	std::stringstream ssText;
-	ssText << "Lives: " << m_pPlayerComponent->GetLives();
+	ssText << "Lives: " << m_pDieObserver->GetLives();
 	m_pTextComponent->SetText(ssText.str());
 }
 
+dae::LivesComponent::~LivesComponent()
+{
+	m_pDieObserver = nullptr;
+	m_pTextComponent = nullptr;
+}
+
+
 void dae::LivesComponent::Update()
 {
-	
-	if (m_pTextComponent != nullptr && m_pPlayerComponent != nullptr)
+	if (m_pTextComponent != nullptr && m_pDieObserver != nullptr)
 	{
-		// refresh rate
-		m_elapsedTime += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
-		if (m_elapsedTime >= m_refreshRate)
+		const int lives = m_pDieObserver->GetLives();
+		
+		if(m_lives != lives)
 		{
-			// reset
-			m_elapsedTime = 0;
 			// text
 			std::stringstream ssText;
-			ssText << "Lives: " << m_pPlayerComponent->GetLives();
+			ssText << "Lives: " << lives;
 			m_pTextComponent->SetText(ssText.str());
+
+			m_lives = lives;
 		}
 	}
 }

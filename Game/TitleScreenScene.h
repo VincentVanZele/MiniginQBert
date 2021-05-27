@@ -19,6 +19,7 @@ namespace dae
 		//virtual void Draw() const override;
 	private:
 		bool _isCoop = true;
+		int m_numberTiles{}, m_numberDisks{2};
 
 		ScoreObserver* m_obs{ nullptr };
 		TextComponent* m_score{ nullptr };

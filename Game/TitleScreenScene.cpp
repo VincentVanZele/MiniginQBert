@@ -7,7 +7,8 @@
 #include "FPSCounter.h"
 
 #include "FPSComponent.h"
-#include "GameTime.h"
+#include "LivesComponent.h"
+#include "DieObserver.h"
 #include "Player.h"
 #include "ScoreComponent.h"
 #include "ScoreObserver.h"
@@ -15,6 +16,7 @@
 #include "TextureComponent.h"
 #include "TransformComponent.h"
 #include "WorldGrid.h"
+#include "WorldObserver.h"
 
 
 dae::TitleScreenScene::TitleScreenScene()
@@ -83,6 +85,8 @@ void dae::TitleScreenScene::Initialize()
 	m_world = new WorldGrid(8, Float2(200, 300), level);
 	level->AddComponent(m_world);
 
+	m_numberTiles = m_world->GetNumberOfTiles() - m_numberDisks; // 2 disks
+
 	// Player
 	auto player = std::make_shared<GameObject>();
 
@@ -90,11 +94,13 @@ void dae::TitleScreenScene::Initialize()
 	player->AddComponent(m_player);
 	
 	m_player->AddObserver(new ScoreObserver());
+	m_player->AddObserver(new DieObserver());
+	m_player->AddObserver(new WorldObserver());
 
 	Add(level);
 	Add(player);
 
-	// Score
+	// Score Player 1
 	auto scoreGo = std::make_shared<GameObject>();
 
 	textComp = new TextComponent(font3);
@@ -103,14 +109,45 @@ void dae::TitleScreenScene::Initialize()
 	auto scoreComp = new ScoreComponent(m_player->GetSubject()->GetObserver<ScoreObserver>());
 	
 	scoreGo->AddComponent(scoreComp);
+	scoreGo->GetTransform()->Translate(Float2{ 25, 75 });
+	Add(scoreGo);
 
-	scoreGo->GetTransform()->Translate(Float2{ 10, 155 });
+	// Lives
+	auto livesGo = std::make_shared<GameObject>();
+
+	textComp = new TextComponent(font3);
+	textComp->SetColor(Float3{ 255,119,0 });
+	livesGo->AddComponent(textComp);
+	
+	auto livesComp = new LivesComponent(m_player->GetSubject()->GetObserver<DieObserver>());
+
+	livesGo->AddComponent(livesComp);
+	livesGo->GetTransform()->Translate(Float2{ 25, 50 });
+	Add(livesGo);
+
+	// Score Player 2
+	scoreGo = std::make_shared<GameObject>();
+
+	textComp = new TextComponent(font3);
+	textComp->SetColor(Float3{ 220,70,255 });
+	scoreGo->AddComponent(textComp);
+	scoreComp = new ScoreComponent(new ScoreObserver());
+
+	scoreGo->AddComponent(scoreComp);
+
+	scoreGo->GetTransform()->Translate(Float2{ 475, 75 });
 
 	Add(scoreGo);
 }
 
 void dae::TitleScreenScene::Update()
 {
-	//m_score->SetText(std::to_string(m_player->GetScore()));
+	int yes = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
+	
+	if( yes== m_numberTiles )
+	{
+		// win condition met
+	}
+	
 	Scene::Update();
 }

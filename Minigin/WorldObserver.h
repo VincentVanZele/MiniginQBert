@@ -3,16 +3,16 @@
 
 namespace dae
 {
-	class DieObserver : public Observer
+	class WorldObserver : public Observer
 	{
 	public:
 		void Notify(Event event) override;
-		int GetLives() const
+		int GetFlippedTiles() const
 		{
-			return m_lives;
+			return m_tiles;
 		}
 
 	private:
-		int m_lives{10};
+		int m_tiles{};
 	};
 }

@@ -241,6 +241,9 @@
     <ClInclude Include="Profiler.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="WorldObserver.h">
+      <Filter>Observers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -374,6 +377,9 @@
     </ClCompile>
     <ClCompile Include="FlamePlot.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObserver.cpp">
+      <Filter>Observers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 #include "MiniginPCH.h"
+#include <vld.h>
 #include "Minigin.h"
 #include <chrono>
 #include <thread>

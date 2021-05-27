@@ -30,6 +30,16 @@ namespace dae
 
 		void AddObserver(Observer* observer) const;
 		void RemoveObserver(Observer* observer) const;
+
+		int GetNumberOfTiles() const
+		{
+			return (int)m_pGridTiles.size();
+		}
+
+		Subject* GetSubject() const
+		{
+			return m_pSubject;
+		}
 		
 	private:
 		
