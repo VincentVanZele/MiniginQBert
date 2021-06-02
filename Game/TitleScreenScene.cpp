@@ -17,6 +17,8 @@
 #include "TransformComponent.h"
 #include "WorldGrid.h"
 #include "WorldObserver.h"
+#include "Eggs.h"
+#include "GridTile.h"
 
 
 dae::TitleScreenScene::TitleScreenScene()
@@ -82,15 +84,15 @@ void dae::TitleScreenScene::Initialize()
 	// WORLD
 	auto level = std::make_shared<GameObject>();
 
-	m_world = new WorldGrid(8, Float2(200, 300), level);
+	m_world = new WorldGrid(10, Float2(200, 300), level);
 	level->AddComponent(m_world);
 
-	m_numberTiles = m_world->GetNumberOfTiles() - m_numberDisks; // 2 disks
+	m_numberTiles = m_world->GetNumberOfChangeableTiles(); // 2 disks
 
 	// Player
 	auto player = std::make_shared<GameObject>();
 
-	m_player = new Player(m_world->GetCubeAtIndex(0));
+	m_player = new Player(m_world->GetCubeAtIndex(4));
 	player->AddComponent(m_player);
 	
 	m_player->AddObserver(new ScoreObserver());
@@ -138,6 +140,20 @@ void dae::TitleScreenScene::Initialize()
 	scoreGo->GetTransform()->Translate(Float2{ 475, 75 });
 
 	Add(scoreGo);
+
+	// Egg purple
+	auto eggPurple = std::make_shared<GameObject>();
+
+	m_eggP = new Eggs(m_world->GetCubeAtIndex(11), EggType::Purple, Float2{ m_world->GetCubeAtIndex(11)->GetCenter()._x, 0 }, true);
+	eggPurple->AddComponent(m_eggP);
+	Add(eggPurple);
+
+	// Egg red
+	auto eggRed= std::make_shared<GameObject>();
+
+	m_eggR = new Eggs(m_world->GetCubeAtIndex(13), EggType::Red, Float2{ m_world->GetCubeAtIndex(13)->GetCenter()._x, 0 }, false);
+	eggRed->AddComponent(m_eggR);
+	Add(eggRed);
 }
 
 void dae::TitleScreenScene::Update()

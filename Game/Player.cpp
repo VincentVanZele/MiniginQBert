@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Player.h"
-#include <iostream>
 
 #include "GameObject.h"
 #include "InputManager.h"
@@ -118,6 +117,11 @@ void dae::Player::Update()
 		{
 			if(m_pCurrentTile->GetTileState() == TileState::Disk)
 			{
+				TeleportToTile(m_pSpawnTile);
+			}
+			else if(m_pCurrentTile->GetTileState() == TileState::DeathPlane)
+			{
+				// die
 				TeleportToTile(m_pSpawnTile);
 			}
 			

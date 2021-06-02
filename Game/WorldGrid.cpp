@@ -37,18 +37,17 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 			m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
 
 			// Edge cases
-			if ((i != 5 && j != 0) || (i != 5 && j != i - 1))
+			if (i == m_width)
 			{
-				if (i == m_width)
-				{
-					m_pGridTiles.back()->SetEdgeCaseRow(true);
-				}
-				if (j == 0 || j == i - 1)
-				{
-					m_pGridTiles.back()->SetEdgeCaseCol(true);
-				}
+				m_pGridTiles.back()->SetEdgeCaseRow(true);
+				m_pGridTiles.back()->SetTileState(TileState::DeathPlane);
 			}
-
+			if (j == 0 || j == i - 1)
+			{
+				m_pGridTiles.back()->SetEdgeCaseCol(true);
+				m_pGridTiles.back()->SetTileState(TileState::DeathPlane);
+			}
+			
 			go->AddChild(newTile);
 			tempPos._x += (float)newTile->GetComponent<GridTile>()->GetDefaultTexture()->GetTextWidth();
 		}
@@ -98,24 +97,11 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 	auto sequence = std::make_shared<Animation>(tex, "Disk", 4);
 	m_pSprite1->AddAnimation(sequence);
 	m_pSprite1->SetActiveAnimation("Disk");
+
+	// special cases 22
+	m_pGridTiles[m_disk1]->AddComponent(m_pSprite1);
+	m_pSprite1->GetActiveAnimation().SetPos(Float2{ m_pGridTiles[m_disk1]->GetCenter()._x + tex->GetTextWidth() - m_diskOffset,m_pGridTiles[m_disk1]->GetCenter()._y + m_diskOffset });
 	
-	// special cases 21
-	auto newTile = std::make_shared<GameObject>();
-	newTile->AddComponent(new GridTile(tempPos));
-	newTile->GetComponent<GridTile>()->SetTileState(TileState::Disk);
-
-	m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
-	Float2 newPos = Float2{ m_pGridTiles[m_disk1]->GetCenter()._x + m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2, m_pGridTiles[m_disk1]->GetCenter()._y - m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f };
-
-	m_pGridTiles.back()->SetCenter(newPos);
-	m_pGridTiles.back()->SetEdgeCaseRow(true);
-	m_pGridTiles.back()->SetEdgeCaseCol(true);
-	
-	m_pGridTiles[m_disk1]->AddTileConnections(m_pGridTiles.back(), TileConnections::Right);
-
-	newTile->AddComponent(m_pSprite1);
-	m_pSprite1->GetActiveAnimation().SetPos(Float2{ newTile->GetComponent<GridTile>()->GetCenter()._x + m_diskOffset,newTile->GetComponent<GridTile>()->GetCenter()._y + m_diskOffset });
-	go->AddChild(newTile);
 
 	// Disk 2
 	m_pSprite2 = new SpriteComponent();
@@ -124,24 +110,17 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 	m_pSprite2->AddAnimation(sequence);
 	m_pSprite2->SetActiveAnimation("Disk");
 	
-	// 27
-	newTile = std::make_shared<GameObject>();
-	newTile->AddComponent(new GridTile(tempPos));
-	newTile->GetComponent<GridTile>()->SetTileState(TileState::Disk);
+	// 28
+	m_pGridTiles[m_disk2]->AddComponent(m_pSprite2);
+	m_pSprite2->GetActiveAnimation().SetPos(Float2{ m_pGridTiles[m_disk2]->GetCenter()._x + m_diskOffset,m_pGridTiles[m_disk2]->GetCenter()._y + m_diskOffset });
 
-	m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
-	newPos = Float2{ m_pGridTiles[m_disk2]->GetCenter()._x - m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2, m_pGridTiles[m_disk2]->GetCenter()._y - m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f };
-
-	m_pGridTiles.back()->SetCenter(newPos);
-	m_pGridTiles.back()->SetEdgeCaseRow(true);
-	m_pGridTiles.back()->SetEdgeCaseCol(true);
-
-	m_pGridTiles[m_disk2]->AddTileConnections(m_pGridTiles.back(), TileConnections::Up);
-
-	newTile->AddComponent(m_pSprite2);
-	m_pSprite2->GetActiveAnimation().SetPos(Float2{ newTile->GetComponent<GridTile>()->GetCenter()._x + m_diskOffset,newTile->GetComponent<GridTile>()->GetCenter()._y + m_diskOffset });
-	go->AddChild(newTile);
-	
+	for (GridTile* grid : m_pGridTiles)
+	{
+		if(grid->GetTileState() == TileState::Tile)
+		{
+			m_pChangeableTiles.push_back(grid);
+		}
+	}
 }
 
 dae::WorldGrid::~WorldGrid()
@@ -171,9 +150,14 @@ int dae::WorldGrid::GetCubeIndex(GridTile* tile) const
 	return -1;
 }
 
-dae::GridTile* dae::WorldGrid::GetCubeAtIndex(int ) const
+dae::GridTile* dae::WorldGrid::GetFrontCube() const
 {
 	return m_pGridTiles.front();
+}
+
+dae::GridTile* dae::WorldGrid::GetCubeAtIndex(int idx) const
+{
+	return m_pGridTiles[idx];
 }
 
 void dae::WorldGrid::AddObserver(Observer* observer) const

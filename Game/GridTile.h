@@ -8,9 +8,14 @@ namespace dae
 {
 	class SpriteComponent;
 
+	enum class GridType
+	{
+		Base, TwoJumpActivate, Reset
+	};
+	
 	enum class TileState
 	{
-		Spawn, Disk, Tile, ChangedTile
+		Disk, Tile, Intermediate, ChangedTile, DeathPlane
 	};
 
 	enum class TileConnections
@@ -53,10 +58,18 @@ namespace dae
 			return m_pAdjacentTiles.at((int)dir);
 		};
 
+		bool GetEdgeCaseRow() const
+		{
+			return m_edgecaseRow;
+		}
 		void SetEdgeCaseRow(bool edgeCase)
 		{
 			m_edgecaseRow = edgeCase;
 		};
+		bool GetEdgeCaseCol() const
+		{
+			return m_edgecaseCol;
+		}
 		void SetEdgeCaseCol(bool edgeCase)
 		{
 			m_edgecaseCol = edgeCase;
@@ -109,7 +122,7 @@ namespace dae
 
 		std::array<GridTile*, 4> m_pAdjacentTiles;
 		
-		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged;
+		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged, m_pTextDeath;
 
 		bool m_NeedUpdate = true;
 		bool m_edgecaseRow{ false }, m_edgecaseCol{ false };

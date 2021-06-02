@@ -16,7 +16,7 @@ dae::GridTile::GridTile(Float2 center)
 
 	m_pTextDefault = resourceManager->GetInstance().LoadTexture("DefaultTile.png");
 	m_pTextChanged = resourceManager->GetInstance().LoadTexture("ChangedTile.png");
-
+	m_pTextDeath = resourceManager->GetInstance().LoadTexture("Death.png");
 }
 
 void dae::GridTile::Initialize()
@@ -26,39 +26,36 @@ void dae::GridTile::Initialize()
 
 void dae::GridTile::Update( )
 {
-	/*auto renderer = ServiceLocator::GetRenderer();
 	
-	if (m_NeedUpdate)
-	{
-		auto resourceManager = ServiceLocator::GetResourceManager();
-		
-		if (m_state == TileState::Tile)
-		{
-			m_pTextDefault = resourceManager->GetInstance().LoadTexture("Qube.png");
-		}
-		else
-		{
-			renderer->GetInstance().RenderTexture(*m_pTextChanged, m_tileCenter._x, m_tileCenter._y);
-		}
-	}*/
 }
 
 void dae::GridTile::Render()
 {
-	if (m_state == TileState::Tile)
+	switch(m_state)
 	{
+	case TileState::Tile:
 		if (m_pTextDefault != nullptr)
 		{
 			Renderer::GetInstance().RenderTexture(*m_pTextDefault, m_tileCenter._x, m_tileCenter._y);
 		}
-	}
-	else if(m_state == TileState::ChangedTile)
-	{
+		break;
+	case TileState::Intermediate:
+
+		break;
+	case TileState::ChangedTile:
 		if (m_pTextChanged != nullptr)
 		{
 			Renderer::GetInstance().RenderTexture(*m_pTextChanged, m_tileCenter._x, m_tileCenter._y);
 		}
+		break;
+	case TileState::Disk:
+		// handled elsewhere
+		break;
+	case TileState::DeathPlane:
+		// nothing
+		break;
 	}
+
 }
 
 void dae::GridTile::AddTileConnections(GridTile* tileToLink, TileConnections connection)

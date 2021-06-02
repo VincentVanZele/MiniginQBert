@@ -52,6 +52,9 @@
     <ClInclude Include="TestScene.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Eggs.h">
+      <Filter>Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="TitleScreenScene.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Eggs.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Eggs.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCommands.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="WorldGrid.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Eggs.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>

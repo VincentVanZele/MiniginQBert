@@ -27,10 +27,16 @@ namespace dae
 
 		int GetCubeIndex(GridTile* tile) const;
 		GridTile* GetCubeAtIndex(int index) const;
+		GridTile* GetFrontCube() const;
 
 		void AddObserver(Observer* observer) const;
 		void RemoveObserver(Observer* observer) const;
 
+		int GetNumberOfChangeableTiles() const
+		{
+			return (int)m_pChangeableTiles.size();
+		}
+		
 		int GetNumberOfTiles() const
 		{
 			return (int)m_pGridTiles.size();
@@ -44,11 +50,12 @@ namespace dae
 	private:
 		
 		std::vector<GridTile*> m_pGridTiles;
+		std::vector<GridTile*> m_pChangeableTiles;
 		Float2 m_gridPosition{};
 		SpriteComponent* m_pSprite1 = nullptr;
 		SpriteComponent* m_pSprite2 = nullptr;
 
-		int m_width, m_disk1{21}, m_disk2{27}, m_diskOffset{15};
+		int m_width, m_disk1{22}, m_disk2{27}, m_diskOffset{15};
 		
 		Subject* m_pSubject = nullptr;
 	};
