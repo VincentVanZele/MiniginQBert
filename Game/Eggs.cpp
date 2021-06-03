@@ -104,7 +104,7 @@ void dae::Eggs::Update()
 			m_goLeft = !m_goLeft;
 			m_IsMoving = false;
 			m_pCurrentTile->SetHasEntity(true);
-			if (!m_pCurrentTile->GetEdgeCaseRow())
+			if (m_pCurrentTile->GetTileState() != TileState::DeathPlane)
 			{
 				if (m_goLeft)
 				{

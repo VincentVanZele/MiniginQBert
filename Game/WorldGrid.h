@@ -6,6 +6,7 @@
 
 namespace dae
 {
+	enum class GridType;
 	class GridTile;
 	class SpriteComponent;
 	
@@ -13,7 +14,7 @@ namespace dae
 	class WorldGrid : public BaseComponent
 	{
 	public:
-		WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go);
+		WorldGrid(GridType type, int width, Float2 pos, std::shared_ptr<GameObject> go);
 		~WorldGrid() override;
 
 		void Initialize() override;
@@ -55,7 +56,7 @@ namespace dae
 		SpriteComponent* m_pSprite1 = nullptr;
 		SpriteComponent* m_pSprite2 = nullptr;
 
-		int m_width, m_disk1{22}, m_disk2{27}, m_diskOffset{15};
+		int m_width, m_disk1{21}, m_disk2{27}, m_diskOffset{15};
 		
 		Subject* m_pSubject = nullptr;
 	};

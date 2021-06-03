@@ -17,6 +17,9 @@
     <Filter Include="Player">
       <UniqueIdentifier>{090f66b4-4c4a-4c88-9620-baa2b7554ec0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{d9400f55-a17f-4928-bd43-970c43826077}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -46,14 +49,29 @@
     <ClInclude Include="Enemy.h">
       <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScreenScene.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="TestScene.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Eggs.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScreenScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Level3.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Level2.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Level1.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScreen.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Versus.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -84,14 +102,29 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Player</Filter>
     </ClCompile>
-    <ClCompile Include="TestScene.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleScreenScene.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Eggs.cpp">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScreenScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Level3.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Level2.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Level1.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScreen.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Versus.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

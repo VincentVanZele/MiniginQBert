@@ -12,7 +12,7 @@
 #include "Utils.h"
 #include "Enums.h"
 
-dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
+dae::WorldGrid::WorldGrid(GridType type, int width, Float2 pos, std::shared_ptr<GameObject> go)
 	: m_width(width)
 	, m_gridPosition(pos)
 {
@@ -32,20 +32,20 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 		for (int j = 0; j < i; j++)
 		{
 			auto newTile = std::make_shared<GameObject>();
-			newTile->AddComponent(new GridTile(tempPos));
+			newTile->AddComponent(new GridTile(type,tempPos));
 
 			m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
 
 			// Edge cases
 			if (i == m_width)
 			{
-				m_pGridTiles.back()->SetEdgeCaseRow(true);
 				m_pGridTiles.back()->SetTileState(TileState::DeathPlane);
+				m_pGridTiles.back()->SetDefaultTileState(TileState::DeathPlane);
 			}
 			if (j == 0 || j == i - 1)
 			{
-				m_pGridTiles.back()->SetEdgeCaseCol(true);
 				m_pGridTiles.back()->SetTileState(TileState::DeathPlane);
+				m_pGridTiles.back()->SetDefaultTileState(TileState::DeathPlane);
 			}
 			
 			go->AddChild(newTile);
@@ -100,7 +100,9 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 
 	// special cases 22
 	m_pGridTiles[m_disk1]->AddComponent(m_pSprite1);
-	m_pSprite1->GetActiveAnimation().SetPos(Float2{ m_pGridTiles[m_disk1]->GetCenter()._x + tex->GetTextWidth() - m_diskOffset,m_pGridTiles[m_disk1]->GetCenter()._y + m_diskOffset });
+	m_pGridTiles[m_disk1]->SetTileState(TileState::Disk);
+	m_pGridTiles[m_disk1]->SetDefaultTileState(TileState::Disk);
+	m_pSprite1->GetActiveAnimation().SetPos(Float2{ m_pGridTiles[m_disk1]->GetCenter()._x + m_diskOffset,m_pGridTiles[m_disk1]->GetCenter()._y + m_diskOffset });
 	
 
 	// Disk 2
@@ -112,6 +114,8 @@ dae::WorldGrid::WorldGrid(int width, Float2 pos, std::shared_ptr<GameObject> go)
 	
 	// 28
 	m_pGridTiles[m_disk2]->AddComponent(m_pSprite2);
+	m_pGridTiles[m_disk2]->SetTileState(TileState::Disk);
+	m_pGridTiles[m_disk2]->SetDefaultTileState(TileState::Disk);
 	m_pSprite2->GetActiveAnimation().SetPos(Float2{ m_pGridTiles[m_disk2]->GetCenter()._x + m_diskOffset,m_pGridTiles[m_disk2]->GetCenter()._y + m_diskOffset });
 
 	for (GridTile* grid : m_pGridTiles)

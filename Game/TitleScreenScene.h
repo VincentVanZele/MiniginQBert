@@ -1,14 +1,19 @@
 #pragma once
+#include <Structs.h>
+
 #include "Scene.h"
 #include "Structs.h"
 
 namespace dae
 {
-	class Eggs;
-	class ScoreObserver;
-	class TextComponent;
-	class WorldGrid;
-	class Player;
+	class SpriteComponent;
+
+	enum Button
+	{
+		ButtonSolo,
+		ButtonMultiplayer,
+		ButtonExit
+	};
 
 	class TitleScreenScene final : public dae::Scene
 	{
@@ -17,16 +22,15 @@ namespace dae
 
 		void Initialize() override;
 		void Update() override;
-		//virtual void Draw() const override;
-	private:
-		bool _isCoop = true;
-		int m_numberTiles{}, m_numberDisks{2};
 
-		ScoreObserver* m_obs{ nullptr };
-		TextComponent* m_score{ nullptr };
-		WorldGrid* m_world{ nullptr };
-		Player* m_player{ nullptr };
-		Eggs* m_eggP{ nullptr },* m_eggR{nullptr};
+		void ButtonClicked(Button button);
+	
+	private:
+		Button m_selectedButton;
+
+		Float2 m_soloPos{}, m_coopPos{}, m_exitPos{};
+		std::shared_ptr<GameObject> m_spSelection;
+		SpriteComponent* m_selectionComp;
 	};
 
 }

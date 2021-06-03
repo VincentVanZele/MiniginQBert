@@ -6,7 +6,7 @@ namespace dae
 	class ScoreObserver : public Observer
 	{
 	public:
-		void Notify(Event event) override;
+		void Notify(GameEvent event) override;
 		int GetScore() const
 		{
 			return m_Score;

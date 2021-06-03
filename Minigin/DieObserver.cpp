@@ -1,9 +1,9 @@
 #include "MiniginPCH.h"
 #include "DieObserver.h"
 
-void dae::DieObserver::Notify(Event event)
+void dae::DieObserver::Notify(GameEvent event)
 {
-	if (event == Event::Died)
+	if (event == GameEvent::Died)
 	{
 		m_lives--;
 	}

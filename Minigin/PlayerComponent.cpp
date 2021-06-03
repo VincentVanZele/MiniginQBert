@@ -50,7 +50,7 @@ void dae::PlayerComponent::Update()
 	if(m_hasDied)
 	{
 		--m_lives;
-		m_pSubject->Notify(Event::Died);
+		m_pSubject->Notify(GameEvent::Died);
 		m_hasDied = false;
 	}
 }

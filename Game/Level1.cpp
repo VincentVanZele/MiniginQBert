@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "TestScene.h"
+#include "Level1.h"
 
 #include "GameObject.h"
 #include "ServiceLocator.h"
@@ -21,13 +21,13 @@
 #include "Game.h"
 #include "GridTile.h"
 
-dae::TestScene::TestScene()
-	:Scene("TestScene")
+dae::Level1::Level1()
+	:Scene("Level1")
 {
 	Initialize();
 }
 
-void dae::TestScene::Initialize()
+void dae::Level1::Initialize()
 {
 	// Background
 	auto go = std::make_shared<GameObject>();
@@ -46,19 +46,6 @@ void dae::TestScene::Initialize()
 	m_pSprite->AddAnimation(sequence);
 	m_pSprite->SetActiveAnimation("P1T");
 	m_pSprite->GetActiveAnimation().SetPos(Float2{ 100,10 });
-
-	go->AddComponent(m_pSprite);
-
-	Add(go);
-
-	// Player Text
-	go = std::make_shared<GameObject>();
-	m_pSprite = new SpriteComponent();
-	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("P2_Text.png");
-	sequence = std::make_shared<Animation>(tex, "P2T", 2);
-	m_pSprite->AddAnimation(sequence);
-	m_pSprite->SetActiveAnimation("P2T");
-	m_pSprite->GetActiveAnimation().SetPos(Float2{ 540,10 });
 
 	go->AddComponent(m_pSprite);
 
@@ -84,7 +71,7 @@ void dae::TestScene::Initialize()
 	// WORLD
 	auto level = std::make_shared<GameObject>();
 
-	m_world = new WorldGrid(GridType::Base,10, Float2(150, 325), level);
+	m_world = new WorldGrid(GridType::Base, 10, Float2(150, 325), level);
 	level->AddComponent(m_world);
 
 	m_numberTiles = m_world->GetNumberOfChangeableTiles(); // 2 disks
@@ -127,20 +114,6 @@ void dae::TestScene::Initialize()
 	livesGo->GetTransform()->Translate(Float2{ 25, 50 });
 	Add(livesGo);
 
-	// Score Player 2
-	scoreGo = std::make_shared<GameObject>();
-
-	textComp = new TextComponent(font3);
-	textComp->SetColor(Float3{ 220,70,255 });
-	scoreGo->AddComponent(textComp);
-	scoreComp = new ScoreComponent(new ScoreObserver());
-
-	scoreGo->AddComponent(scoreComp);
-
-	scoreGo->GetTransform()->Translate(Float2{ 475, 75 });
-
-	Add(scoreGo);
-
 	// Egg purple
 	auto eggPurple = std::make_shared<GameObject>();
 
@@ -156,14 +129,18 @@ void dae::TestScene::Initialize()
 	Add(eggRed);
 }
 
-void dae::TestScene::Update()
+void dae::Level1::Update()
 {
 	int yes = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
 
 	if (yes == m_numberTiles)
 	{
-		// win condition met
-		dae::Game::SwitchScene();
+		if (m_doOnce)
+		{
+			// win condition met
+			m_doOnce = false;
+			dae::Game::SwitchEndScreen();
+		}
 	}
 
 	Scene::Update();

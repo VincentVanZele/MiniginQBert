@@ -1,5 +1,5 @@
 #pragma once
-enum class Event;
+enum class GameEvent;
 
 namespace dae
 {
@@ -15,7 +15,7 @@ namespace dae
 		void RemoveAllObservers();
 		void DeleteAllObservers();
 
-		void Notify(Event event);
+		void Notify(GameEvent event);
 
 		// Template
 		template <class T>

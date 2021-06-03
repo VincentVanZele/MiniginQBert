@@ -31,7 +31,7 @@ void dae::Subject::DeleteAllObservers()
 	RemoveAllObservers();
 }
 
-void dae::Subject::Notify(Event event)
+void dae::Subject::Notify(GameEvent event)
 {
 	for (Observer* observer : m_Observers)
 	{

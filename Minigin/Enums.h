@@ -9,7 +9,7 @@ enum class RequiredKeyState
 	Default
 };
 
-enum class Event
+enum class GameEvent
 {
 	Default,
 	Died,

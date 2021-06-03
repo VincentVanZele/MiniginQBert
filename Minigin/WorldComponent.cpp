@@ -28,12 +28,12 @@ void dae::WorldComponent::Update()
 
 	if (m_hasKilled)
 	{
-		m_pSubject->Notify(Event::Killed);
+		m_pSubject->Notify(GameEvent::Killed);
 		m_hasKilled = false;
 	}
 	if(m_hasChengedTile)
 	{
-		m_pSubject->Notify(Event::TileChanged);
+		m_pSubject->Notify(GameEvent::TileChanged);
 		m_hasChengedTile = false;
 	}
 }

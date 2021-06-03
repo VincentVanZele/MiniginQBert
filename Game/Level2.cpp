@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "TestScene.h"
+#include "Level2.h"
 
 #include "GameObject.h"
 #include "ServiceLocator.h"
@@ -18,16 +18,15 @@
 #include "WorldGrid.h"
 #include "WorldObserver.h"
 #include "Eggs.h"
-#include "Game.h"
 #include "GridTile.h"
 
-dae::TestScene::TestScene()
-	:Scene("TestScene")
+dae::Level2::Level2()
+	:Scene("Level2")
 {
 	Initialize();
 }
 
-void dae::TestScene::Initialize()
+void dae::Level2::Initialize()
 {
 	// Background
 	auto go = std::make_shared<GameObject>();
@@ -84,7 +83,7 @@ void dae::TestScene::Initialize()
 	// WORLD
 	auto level = std::make_shared<GameObject>();
 
-	m_world = new WorldGrid(GridType::Base,10, Float2(150, 325), level);
+	m_world = new WorldGrid(GridType::TwoJumps, 10, Float2(200, 300), level);
 	level->AddComponent(m_world);
 
 	m_numberTiles = m_world->GetNumberOfChangeableTiles(); // 2 disks
@@ -156,14 +155,13 @@ void dae::TestScene::Initialize()
 	Add(eggRed);
 }
 
-void dae::TestScene::Update()
+void dae::Level2::Update()
 {
 	int yes = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
 
 	if (yes == m_numberTiles)
 	{
 		// win condition met
-		dae::Game::SwitchScene();
 	}
 
 	Scene::Update();

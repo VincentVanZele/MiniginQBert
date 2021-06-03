@@ -9,16 +9,15 @@ namespace dae
 	class WorldGrid;
 	class Player;
 
-	class TestScene final : public dae::Scene
+	class Level3 final : public dae::Scene
 	{
 	public:
-		TestScene();
+		Level3();
 
 		void Initialize() override;
 		void Update() override;
 
 	private:
-		bool _isCoop = true;
 		int m_numberTiles{}, m_numberDisks{ 2 };
 
 		ScoreObserver* m_obs{ nullptr };

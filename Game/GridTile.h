@@ -10,12 +10,12 @@ namespace dae
 
 	enum class GridType
 	{
-		Base, TwoJumpActivate, Reset
+		Base, TwoJumps, Reset, Versus
 	};
 	
 	enum class TileState
 	{
-		Disk, Tile, Intermediate, ChangedTile, DeathPlane
+		Disk, Tile, Intermediate, ChangedTile, AltChangedTile, DeathPlane
 	};
 
 	enum class TileConnections
@@ -26,7 +26,7 @@ namespace dae
 	class GridTile : public BaseComponent
 	{
 	public:
-		GridTile(Float2 center);
+		GridTile(GridType type, Float2 center);
 		~GridTile() override = default;
 
 		GridTile(const GridTile& other) = delete;
@@ -37,6 +37,11 @@ namespace dae
 		void Initialize() override;
 		void Update() override;
 		void Render() override;
+
+		bool JumpedOn();
+		void JumpedOn(int playerId);
+		
+		void Reset();
 
 		void AddTileConnections(GridTile* tileToLink, TileConnections connection);
 		std::array<GridTile*, 4> GetTileConnections() const
@@ -57,23 +62,6 @@ namespace dae
 		{
 			return m_pAdjacentTiles.at((int)dir);
 		};
-
-		bool GetEdgeCaseRow() const
-		{
-			return m_edgecaseRow;
-		}
-		void SetEdgeCaseRow(bool edgeCase)
-		{
-			m_edgecaseRow = edgeCase;
-		};
-		bool GetEdgeCaseCol() const
-		{
-			return m_edgecaseCol;
-		}
-		void SetEdgeCaseCol(bool edgeCase)
-		{
-			m_edgecaseCol = edgeCase;
-		}
 		
 		Float2 GetCenter() const
 		{
@@ -101,6 +89,14 @@ namespace dae
 		{
 			m_state = state;
 		}
+		TileState GetDefaultTileState() const
+		{
+			return m_defaultState;
+		}
+		void SetDefaultTileState(TileState state)
+		{
+			m_defaultState = state;
+		}
 
 		std::shared_ptr<Texture2D> GetDefaultTexture() const
 		{
@@ -118,15 +114,18 @@ namespace dae
 		
 	private:
 		Float2 m_tileCenter{};
+
+		GridType m_gridType = GridType::Base;
 		TileState m_state = TileState::Tile;
+		TileState m_defaultState = TileState::Tile;
 
 		std::array<GridTile*, 4> m_pAdjacentTiles;
 		
-		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged, m_pTextDeath;
+		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged, m_pTextIntermediate, m_pAltTextChanged;
 
 		bool m_NeedUpdate = true;
-		bool m_edgecaseRow{ false }, m_edgecaseCol{ false };
 		bool m_hasEntity = false;
+		bool m_canChange = false;
 	};
 
 }

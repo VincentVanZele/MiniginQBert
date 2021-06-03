@@ -4,9 +4,9 @@
 #include "MiniginPCH.h"
 #include "DieObserver.h"
 
-void dae::WorldObserver::Notify(Event event)
+void dae::WorldObserver::Notify(GameEvent event)
 {
-	if (event == Event::TileChanged)
+	if (event == GameEvent::TileChanged)
 	{
 		m_tiles++;
 	}

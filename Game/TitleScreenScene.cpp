@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "TitleScreenScene.h"
 
+
+#include "ButtonComponent.h"
 #include "GameObject.h"
 #include "ServiceLocator.h"
 #include "ResourceManager.h"
 #include "FPSCounter.h"
 
+#include "InputManager.h"
 #include "FPSComponent.h"
 #include "LivesComponent.h"
 #include "DieObserver.h"
@@ -18,11 +21,17 @@
 #include "WorldGrid.h"
 #include "WorldObserver.h"
 #include "Eggs.h"
+#include "Game.h"
 #include "GridTile.h"
+#include "Listener.h"
+#include "Event.h"
 
 
 dae::TitleScreenScene::TitleScreenScene()
 	: Scene("Title")
+	, m_selectedButton{ButtonSolo}
+	, m_spSelection{ std::make_shared<GameObject>() }
+	, m_soloPos{ Float2{ 180.0f, 245.0f } }, m_coopPos{ Float2{ 180.0f, 300.0f } }, m_exitPos{ Float2{ 180.0f, 360.0f } }
 {
 	Initialize();
 }
@@ -30,140 +39,148 @@ dae::TitleScreenScene::TitleScreenScene()
 void dae::TitleScreenScene::Initialize()
 {
 	// Background
-	auto go = std::make_shared<GameObject>();
-	auto tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("background.jpg");
+	auto gob = std::make_shared<GameObject>();
+	auto texb = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("background.jpg");
 	auto texComp = new TextureComponent();
-	
-	texComp->SetTexture(tex);
-	go->AddComponent(texComp);
+
+	texComp->SetTexture(texb);
+	gob->AddComponent(texComp);
+	Add(gob);
+
+	// Button
+	auto resourceManager = ServiceLocator::GetResourceManager();
+	Float2 buttonDimension{ 196.0f, 42.0f };
+
+	auto go = std::make_shared<GameObject>();
+	auto tex = resourceManager->GetInstance().LoadTexture("ButtonSolo.png");
+	auto buttonComp = new ButtonComponent(tex, buttonDimension._x, buttonDimension._y);
+	go->AddComponent(buttonComp);
 	Add(go);
 
-	// Player Text
+	go->GetTransform()->Translate(Float2{ 210.0f, 237.0f });
+	auto list = std::make_shared<Listener>();
+	list->SetNotifyFunction([this]() {this->ButtonClicked(Button::ButtonSolo); });
+	buttonComp->m_spClick->AddListener(list);
+
+
 	go = std::make_shared<GameObject>();
-	auto m_pSprite = new SpriteComponent();
-	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("P1_Text.png");
-	auto sequence = std::make_shared<Animation>(tex, "P1T", 2);
-	m_pSprite->AddAnimation(sequence);
-	m_pSprite->SetActiveAnimation("P1T");
-	m_pSprite->GetActiveAnimation().SetPos(Float2{100,10});
-
-	go->AddComponent(m_pSprite);
-	
+	tex = resourceManager->GetInstance().LoadTexture("ButtonCoop.png");
+	buttonComp = new ButtonComponent(tex, buttonDimension._x, buttonDimension._y);
+	go->AddComponent(buttonComp);
 	Add(go);
 
-	// Player Text
+	go->GetTransform()->Translate(Float2{ 210.0f, 295.0f });
+	list = std::make_shared<Listener>();
+	list->SetNotifyFunction([this]() {this->ButtonClicked(Button::ButtonMultiplayer); });
+	buttonComp->GetEvent()->AddListener(list);
+
 	go = std::make_shared<GameObject>();
-	m_pSprite = new SpriteComponent();
-	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("P2_Text.png");
-	sequence = std::make_shared<Animation>(tex, "P2T", 2);
-	m_pSprite->AddAnimation(sequence);
-	m_pSprite->SetActiveAnimation("P2T");
-	m_pSprite->GetActiveAnimation().SetPos(Float2{ 540,10 });
-
-	go->AddComponent(m_pSprite);
-
+	tex = resourceManager->GetInstance().LoadTexture("ButtonQuit.png");
+	buttonComp = new ButtonComponent(tex, buttonDimension._x, buttonDimension._y);
+	go->AddComponent(buttonComp);
 	Add(go);
 
-	// FPS
-	const auto font3 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+	go->GetTransform()->Translate(Float2{ 210.0f, 353.0f });
+	list = std::make_shared<Listener>();
+	list->SetNotifyFunction([this]() {this->ButtonClicked(Button::ButtonExit); });
+	buttonComp->GetEvent()->AddListener(list);
 
-	auto fpsGo = std::make_shared<GameObject>();
-	auto*  fpsCounter = new FPSCounter();
-	auto*  fpsComp = new FPSComponent();
-	auto*  textComp = new TextComponent(font3);
+	auto tex3 = resourceManager->GetInstance().LoadTexture("Fire1.png");
+	auto sequence = std::make_shared<Animation>(tex3, "fire2", 4);
+	m_selectionComp = new SpriteComponent();
 
-	textComp->SetColor({ 255,0,0 });
-	fpsGo->AddComponent(fpsCounter);
-	fpsGo->AddComponent(textComp);
-	fpsGo->AddComponent(fpsComp);
+	m_spSelection->GetTransform()->Translate(m_soloPos);
 
-	fpsGo->GetTransform()->Translate(Float2{ 10, 455 });
-
-	Add(fpsGo);
-
-	// WORLD
-	auto level = std::make_shared<GameObject>();
-
-	m_world = new WorldGrid(10, Float2(200, 300), level);
-	level->AddComponent(m_world);
-
-	m_numberTiles = m_world->GetNumberOfChangeableTiles(); // 2 disks
-
-	// Player
-	auto player = std::make_shared<GameObject>();
-
-	m_player = new Player(m_world->GetCubeAtIndex(4));
-	player->AddComponent(m_player);
-	
-	m_player->AddObserver(new ScoreObserver());
-	m_player->AddObserver(new DieObserver());
-	m_player->AddObserver(new WorldObserver());
-
-	Add(level);
-	Add(player);
-
-	// Score Player 1
-	auto scoreGo = std::make_shared<GameObject>();
-
-	textComp = new TextComponent(font3);
-	textComp->SetColor(Float3{ 255,119,0 });
-	scoreGo->AddComponent(textComp);
-	auto scoreComp = new ScoreComponent(m_player->GetSubject()->GetObserver<ScoreObserver>());
-	
-	scoreGo->AddComponent(scoreComp);
-	scoreGo->GetTransform()->Translate(Float2{ 25, 75 });
-	Add(scoreGo);
-
-	// Lives
-	auto livesGo = std::make_shared<GameObject>();
-
-	textComp = new TextComponent(font3);
-	textComp->SetColor(Float3{ 255,119,0 });
-	livesGo->AddComponent(textComp);
-	
-	auto livesComp = new LivesComponent(m_player->GetSubject()->GetObserver<DieObserver>());
-
-	livesGo->AddComponent(livesComp);
-	livesGo->GetTransform()->Translate(Float2{ 25, 50 });
-	Add(livesGo);
-
-	// Score Player 2
-	scoreGo = std::make_shared<GameObject>();
-
-	textComp = new TextComponent(font3);
-	textComp->SetColor(Float3{ 220,70,255 });
-	scoreGo->AddComponent(textComp);
-	scoreComp = new ScoreComponent(new ScoreObserver());
-
-	scoreGo->AddComponent(scoreComp);
-
-	scoreGo->GetTransform()->Translate(Float2{ 475, 75 });
-
-	Add(scoreGo);
-
-	// Egg purple
-	auto eggPurple = std::make_shared<GameObject>();
-
-	m_eggP = new Eggs(m_world->GetCubeAtIndex(11), EggType::Purple, Float2{ m_world->GetCubeAtIndex(11)->GetCenter()._x, 0 }, true);
-	eggPurple->AddComponent(m_eggP);
-	Add(eggPurple);
-
-	// Egg red
-	auto eggRed= std::make_shared<GameObject>();
-
-	m_eggR = new Eggs(m_world->GetCubeAtIndex(13), EggType::Red, Float2{ m_world->GetCubeAtIndex(13)->GetCenter()._x, 0 }, false);
-	eggRed->AddComponent(m_eggR);
-	Add(eggRed);
+	sequence->SetPos(m_spSelection->GetTransform()->GetPosition());
+	sequence->SetFrameDeltatime(0.2f);
+	m_selectionComp->AddAnimation(sequence);
+	m_selectionComp->SetActiveAnimation("fire2");
+	m_spSelection->AddComponent(m_selectionComp);
+	Add(m_spSelection);
 }
 
 void dae::TitleScreenScene::Update()
 {
-	int yes = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
+	// Selection position
+	m_selectionComp->GetActiveAnimation().SetPos(m_spSelection->GetTransform()->GetPosition());
+
 	
-	if( yes== m_numberTiles )
+	if (InputManager::GetInstance().KeyUp(ControllerButton::YVK,0))
 	{
-		// win condition met
+		switch (m_selectedButton)
+		{
+		case Button::ButtonSolo:
+			m_selectedButton = Button::ButtonExit;
+			m_spSelection->GetTransform()->SetPosition(m_exitPos);
+			break;
+		case Button::ButtonMultiplayer:
+			m_selectedButton = Button::ButtonSolo;
+			m_spSelection->GetTransform()->SetPosition(m_soloPos);
+			break;
+		case Button::ButtonExit:
+			m_selectedButton = Button::ButtonMultiplayer;
+			m_spSelection->GetTransform()->SetPosition(m_coopPos);
+			break;
+		default:
+			break;
+		}
+	}
+	if (InputManager::GetInstance().KeyUp(ControllerButton::AVK, 0))
+	{
+		switch (m_selectedButton)
+		{
+		case Button::ButtonSolo:
+			m_selectedButton = Button::ButtonMultiplayer;
+			m_spSelection->GetTransform()->SetPosition(m_coopPos);
+			break;
+		case Button::ButtonMultiplayer:
+			m_selectedButton = Button::ButtonExit;
+			m_spSelection->GetTransform()->SetPosition(m_exitPos);
+			break;
+		case Button::ButtonExit:
+			m_selectedButton = Button::ButtonSolo;
+			m_spSelection->GetTransform()->SetPosition(m_soloPos);
+			break;
+		default:
+			break;
+		}
+	}
+	if (InputManager::GetInstance().KeyUp(ControllerButton::BVK, 0))
+	{
+
+		switch (m_selectedButton)
+		{
+		case Button::ButtonSolo:
+			ButtonClicked(Button::ButtonSolo);
+			break;
+		case Button::ButtonMultiplayer:
+			ButtonClicked(Button::ButtonMultiplayer);
+			break;
+		case Button::ButtonExit:
+			ButtonClicked(Button::ButtonExit);
+			break;
+		default:
+			break;
+		}
 	}
 	
 	Scene::Update();
+}
+
+void dae::TitleScreenScene::ButtonClicked(Button button)
+{
+	//auto& sceneManager = ServiceLocator::GetSceneManager()->GetInstance();
+
+	switch (button)
+	{
+	case Button::ButtonSolo:
+		dae::Game::SwitchLevel1();
+		break;
+	case Button::ButtonMultiplayer:
+		dae::Game::SwitchLevel3();
+		break;
+	case Button::ButtonExit:
+		// no game
+		break;
+	}
 }

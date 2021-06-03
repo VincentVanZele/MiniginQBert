@@ -12,5 +12,11 @@ namespace dae
 		void Run();
 		void LoadScenes();
 		static void SwitchScene();
+
+		static void SwitchLevel1();
+		static void SwitchLevel2();
+		static void SwitchLevel3();
+		
+		static void SwitchEndScreen();
 	};
 }

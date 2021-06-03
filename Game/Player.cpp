@@ -96,7 +96,7 @@ void dae::Player::Update()
 	if (m_hasDied)
 	{
 		--m_lives;
-		m_pSubject->Notify(Event::Died);
+		m_pSubject->Notify(GameEvent::Died);
 		m_hasDied = false;
 	}
 
@@ -127,11 +127,13 @@ void dae::Player::Update()
 			
 			m_needMoveUpdate = false;
 			m_IsMoving = false;
-			if(m_pCurrentTile->ToggleState())
+			
+			if(m_pCurrentTile->JumpedOn())
 			{
-				m_pSubject->Notify(Event::TileChanged);
+				m_pSubject->Notify(GameEvent::TileChanged);
 			}
 			m_pCurrentTile->SetHasEntity(true);
+			
 			ToggleMoveRestriction();
 		}
 	}

@@ -1,13 +1,13 @@
 #include "MiniginPCH.h"
 #include "ScoreObserver.h"
 
-void dae::ScoreObserver::Notify(Event event)
+void dae::ScoreObserver::Notify(GameEvent event)
 {
-	if (event == Event::Killed)
+	if (event == GameEvent::Killed)
 	{
 		m_Score += 100;
 	}
-	else if (event == Event::TileChanged)
+	else if (event == GameEvent::TileChanged)
 	{
 		m_Score += 50;
 	}

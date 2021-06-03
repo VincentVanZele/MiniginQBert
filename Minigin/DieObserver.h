@@ -6,7 +6,7 @@ namespace dae
 	class DieObserver : public Observer
 	{
 	public:
-		void Notify(Event event) override;
+		void Notify(GameEvent event) override;
 		int GetLives() const
 		{
 			return m_lives;

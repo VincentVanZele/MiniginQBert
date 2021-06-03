@@ -6,7 +6,7 @@ namespace dae
 	class WorldObserver : public Observer
 	{
 	public:
-		void Notify(Event event) override;
+		void Notify(GameEvent event) override;
 		int GetFlippedTiles() const
 		{
 			return m_tiles;

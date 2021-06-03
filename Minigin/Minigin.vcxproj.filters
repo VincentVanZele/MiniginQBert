@@ -244,6 +244,15 @@
     <ClInclude Include="WorldObserver.h">
       <Filter>Observers</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Observers</Filter>
+    </ClInclude>
+    <ClInclude Include="Listener.h">
+      <Filter>Observers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -379,6 +388,15 @@
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="WorldObserver.cpp">
+      <Filter>Observers</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener.cpp">
+      <Filter>Observers</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
       <Filter>Observers</Filter>
     </ClCompile>
   </ItemGroup>
