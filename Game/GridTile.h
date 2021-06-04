@@ -38,8 +38,7 @@ namespace dae
 		void Update() override;
 		void Render() override;
 
-		bool JumpedOn();
-		void JumpedOn(int playerId);
+		bool JumpedOn(int playerId);
 		
 		void Reset();
 

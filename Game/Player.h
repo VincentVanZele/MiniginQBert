@@ -12,12 +12,17 @@ namespace dae
 	class Subject;
 	class Observer;
 	class GridTile;
+
+	enum PlayerIdx
+	{
+		Player1, Player2
+	};
 	
 	class Player : public BaseComponent
 	{
 	public:
 		// Player 
-		Player(GridTile* spawn);
+		Player(GridTile* spawn, PlayerIdx idx);
 		~Player() override;
 
 		Player(Player const& other) = delete;
@@ -30,9 +35,15 @@ namespace dae
 		void Update() override;
 		void Render() override;
 
+		void Player1();
+		void Player2();
+
 		// Controller
 		int GetControllerId() const { return m_ControllerId; }
 		Input GetInput() const { return m_Input; }
+
+		//Keyboard
+		void HandleKeyboardInput();
 
 		// Tile
 		void SetCurrentTile(GridTile* tile)
@@ -129,5 +140,7 @@ namespace dae
 		// Other
 		int m_lives = 10;
 		int m_score = 0;
+		PlayerIdx m_player{ PlayerIdx::Player1 };
+
 	};
 }

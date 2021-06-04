@@ -26,6 +26,7 @@
 #include "Level3.h"
 #include "TestScene.h"
 #include "TitleScreenScene.h"
+#include "Versus.h"
 #include "WorldComponent.h"
 
 void dae::Game::Run()
@@ -59,6 +60,7 @@ void dae::Game::SwitchLevel1()
 	std::shared_ptr<Scene> scene = std::make_shared<Level1>();
 
 	SceneManager::GetInstance().AddScene(scene);
+	SceneManager::GetInstance().DeleteScene("Title");
 	SceneManager::GetInstance().SetActiveScene(scene->GetName());
 }
 void dae::Game::SwitchLevel2()
@@ -71,6 +73,14 @@ void dae::Game::SwitchLevel2()
 void dae::Game::SwitchLevel3()
 {
 	std::shared_ptr<Scene> scene = std::make_shared<Level3>();
+
+	SceneManager::GetInstance().AddScene(scene);
+	SceneManager::GetInstance().SetActiveScene(scene->GetName());
+}
+
+void dae::Game::SwitchVersus()
+{
+	std::shared_ptr<Scene> scene = std::make_shared<Versus>();
 
 	SceneManager::GetInstance().AddScene(scene);
 	SceneManager::GetInstance().SetActiveScene(scene->GetName());

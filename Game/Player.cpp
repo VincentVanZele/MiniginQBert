@@ -13,11 +13,12 @@
 #include "Subject.h"
 #include "TransformComponent.h"
 
-dae::Player::Player(GridTile* spawn)
+dae::Player::Player(GridTile* spawn, PlayerIdx idx)
 	: m_pTexture(nullptr)
-	, m_pSpawnTile(spawn)
 	, m_pCurrentTile(spawn)
 	, m_pSubject(new Subject())
+	, m_player(idx)
+	, m_pSpawnTile(spawn)
 {
 	
 }
@@ -30,6 +31,18 @@ dae::Player::~Player()
 }
 
 void dae::Player::Initialize()
+{
+	if(m_player == PlayerIdx::Player1)
+	{
+		Player1();
+	}
+	else
+	{
+		Player2();
+	}
+}
+
+void dae::Player::Player1()
 {
 	m_pSprite = new SpriteComponent();
 
@@ -61,9 +74,9 @@ void dae::Player::Initialize()
 	m_pSprite->SetActiveAnimation("Idle");
 
 	this->AddComponent(m_pSprite);
-	
+
 	m_pTexture = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert.png");
-	
+
 	// 0 -> first controller
 	if (ServiceLocator::GetInputManager()->GetInstance().IsControllerConnected(0))
 	{
@@ -78,28 +91,52 @@ void dae::Player::Initialize()
 	InputManager::GetInstance().AddCommand(new MoveRight(m_ControllerId, RequiredKeyState::KeyDown, this), ControllerButton::BVK);
 }
 
+void dae::Player::Player2()
+{
+	m_pSprite = new SpriteComponent();
+
+	// Left
+	auto tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q2_BotLeft.png");
+	auto sequence = std::make_shared<Animation>(tex, "Left2", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Idle
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert2.png");
+	sequence = std::make_shared<Animation>(tex, "Idle2", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Right
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q2_TopRight.png");
+	sequence = std::make_shared<Animation>(tex, "Right2", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Up
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q2_TopLeft.png");
+	sequence = std::make_shared<Animation>(tex, "Up2", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	// Down
+	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("Q2_BotRight.png");
+	sequence = std::make_shared<Animation>(tex, "Down2", 2);
+	m_pSprite->AddAnimation(sequence);
+
+	m_pSprite->SetActiveAnimation("Idle2");
+
+	this->AddComponent(m_pSprite);
+
+	m_pTexture = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("QBert2.png");
+
+
+	TeleportToTile(m_pSpawnTile);
+
+	InputManager::GetInstance().AddInput("left", 'a');
+	InputManager::GetInstance().AddInput("right", 'e');
+	InputManager::GetInstance().AddInput("up", 'q');
+	InputManager::GetInstance().AddInput("down", 'd');
+}
+
 void dae::Player::Update()
 {
-	if (m_pActivState != nullptr)
-	{
-		ActorState* newState = m_pActivState->Update();
-		if (newState != nullptr)
-		{
-			m_pActivState->ExitState();
-			delete m_pActivState;
-			m_pActivState = newState;
-			m_pActivState->EnterState();
-		}
-	}
-	m_Input = Input::Default;
-
-	if (m_hasDied)
-	{
-		--m_lives;
-		m_pSubject->Notify(GameEvent::Died);
-		m_hasDied = false;
-	}
-
 	if(m_needMoveUpdate)
 	{
 		auto x = m_TargetPosition._x - m_pGameObject.lock()->GetTransform()->GetPosition()._x;
@@ -128,7 +165,7 @@ void dae::Player::Update()
 			m_needMoveUpdate = false;
 			m_IsMoving = false;
 			
-			if(m_pCurrentTile->JumpedOn())
+			if(m_pCurrentTile->JumpedOn(m_player))
 			{
 				m_pSubject->Notify(GameEvent::TileChanged);
 			}
@@ -144,6 +181,11 @@ void dae::Player::Update()
 	};
 	
 	m_pSprite->GetActiveAnimation().SetPos(animationPos);
+
+	if(m_player==PlayerIdx::Player2)
+	{
+		HandleKeyboardInput();
+	}
 }
 
 void dae::Player::Render()
@@ -156,6 +198,25 @@ void dae::Player::Die()
 	TeleportToTile(m_pSpawnTile);
 }
 
+void dae::Player::HandleKeyboardInput()
+{
+	if (InputManager::GetInstance().KeyUp("left") && !m_moveRestriction)
+	{
+		this->MoveTo(TileConnections::Left);
+	}
+	if (InputManager::GetInstance().KeyUp("right") && !m_moveRestriction)
+	{
+		this->MoveTo(TileConnections::Right);
+	}
+	if (InputManager::GetInstance().KeyUp("up") && !m_moveRestriction)
+	{
+		this->MoveTo(TileConnections::Up);
+	}
+	if (InputManager::GetInstance().KeyUp("down") && !m_moveRestriction)
+	{
+		this->MoveTo(TileConnections::Down);
+	}
+}
 
 void dae::Player::MoveTo(TileConnections connection)
 {
@@ -186,23 +247,47 @@ void dae::Player::UpdateTextures(TileConnections state)
 	auto resourceManager = ServiceLocator::GetResourceManager();
 	
 	// no need to check for nullptr, has been done in MoveTo
-	switch (state)
+	if (m_player == PlayerIdx::Player1)
 	{
-	case TileConnections::Default:
-		m_pSprite->SetActiveAnimation("Idle");
-		break;
-	case TileConnections::Up: // Top left
-		m_pSprite->SetActiveAnimation("Up");
-		break;
-	case TileConnections::Down: // Bot right
-		m_pSprite->SetActiveAnimation("Down");
-		break;
-	case TileConnections::Left: // Bot left
-		m_pSprite->SetActiveAnimation("Left");
-		break;
-	case TileConnections::Right: // Top right
-		m_pSprite->SetActiveAnimation("Right");
-		break;
+		switch (state)
+		{
+		case TileConnections::Default:
+			m_pSprite->SetActiveAnimation("Idle");
+			break;
+		case TileConnections::Up: // Top left
+			m_pSprite->SetActiveAnimation("Up");
+			break;
+		case TileConnections::Down: // Bot right
+			m_pSprite->SetActiveAnimation("Down");
+			break;
+		case TileConnections::Left: // Bot left
+			m_pSprite->SetActiveAnimation("Left");
+			break;
+		case TileConnections::Right: // Top right
+			m_pSprite->SetActiveAnimation("Right");
+			break;
+		}
+	}
+	else
+	{
+		switch (state)
+		{
+		case TileConnections::Default:
+			m_pSprite->SetActiveAnimation("Idle2");
+			break;
+		case TileConnections::Up: // Top left
+			m_pSprite->SetActiveAnimation("Up2");
+			break;
+		case TileConnections::Down: // Bot right
+			m_pSprite->SetActiveAnimation("Down2");
+			break;
+		case TileConnections::Left: // Bot left
+			m_pSprite->SetActiveAnimation("Left2");
+			break;
+		case TileConnections::Right: // Top right
+			m_pSprite->SetActiveAnimation("Right2");
+			break;
+		}
 	}
 }
 

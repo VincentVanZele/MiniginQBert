@@ -52,7 +52,7 @@ void dae::GridTile::Update( )
 	
 }
 
-bool dae::GridTile::JumpedOn()
+bool dae::GridTile::JumpedOn(int playerId)
 {
 	switch (m_gridType)
 	{
@@ -93,14 +93,7 @@ bool dae::GridTile::JumpedOn()
 			m_state = TileState::Tile;
 		}
 		break;
-	}
-	return false;
-}
-
-void dae::GridTile::JumpedOn(int playerId)
-{
-	if(m_gridType == GridType::Versus)
-	{
+	case GridType::Versus:
 		switch (playerId)
 		{
 		case 0:
@@ -110,9 +103,11 @@ void dae::GridTile::JumpedOn(int playerId)
 			m_state = TileState::AltChangedTile;
 			break;
 		default:
-			break;		
+			break;
 		}
+		break;
 	}
+	return false;
 }
 
 void dae::GridTile::Reset()
@@ -141,6 +136,12 @@ void dae::GridTile::Render()
 		if (m_pTextChanged != nullptr)
 		{
 			Renderer::GetInstance().RenderTexture(*m_pTextChanged, m_tileCenter._x, m_tileCenter._y);
+		}
+		break;
+	case TileState::AltChangedTile:
+		if (m_pTextChanged != nullptr)
+		{
+			Renderer::GetInstance().RenderTexture(*m_pAltTextChanged, m_tileCenter._x, m_tileCenter._y);
 		}
 		break;
 	case TileState::Disk:

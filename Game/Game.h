@@ -16,6 +16,8 @@ namespace dae
 		static void SwitchLevel1();
 		static void SwitchLevel2();
 		static void SwitchLevel3();
+
+		static void SwitchVersus();
 		
 		static void SwitchEndScreen();
 	};

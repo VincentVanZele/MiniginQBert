@@ -71,6 +71,105 @@ void dae::InputManager::Initialize()
 
 bool dae::InputManager::ProcessInput()
 {
+	if (!ProcessKeyboardInput())
+	{
+		return false;
+	}
+	if(!ProcessControllerInput())
+	{
+		return false;
+	}
+	
+	return true;
+}
+
+bool dae::InputManager::ProcessKeyboardInput()
+{
+	for (auto& cmd : m_KeyCommands)
+	{
+		cmd.second._keyDown = false;
+		cmd.second._keyUp = false;
+	}
+
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		auto key = event.key.keysym.sym;
+
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			return false;
+		case SDL_KEYDOWN:
+			// command buttons
+			for (std::pair<const std::string, SDLCommand>& cmd : m_KeyCommands)
+			{
+				if (cmd.second._sdlKey == key)
+				{
+					if (cmd.second._keyPressed)
+						break;
+
+					cmd.second._keyPressed = true;
+					cmd.second._keyDown = true;
+					break;
+				}
+			}
+			break;
+		case SDL_KEYUP:
+			if (key == SDLK_ESCAPE)
+				return false;
+
+			for (std::pair<const std::string, SDLCommand>& cmd : m_KeyCommands)
+			{
+				if (cmd.second._sdlKey == key)
+				{
+					cmd.second._keyPressed = false;
+					cmd.second._keyUp = true;
+					break;
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+dae::Float2 dae::InputManager::GetMousePos()
+{
+	return m_mousePos;
+}
+
+void dae::InputManager::UpdateMousePos()
+{
+	int x{}, y{};
+	SDL_GetMouseState(&x, &y);
+
+	m_mousePos._x = (float)x;
+	m_mousePos._y = (float)y;
+}
+
+void dae::InputManager::AddInput(const std::string& name, int32_t sdlKey)
+{
+	m_KeyCommands[name] = SDLCommand(sdlKey);
+}
+
+bool dae::InputManager::IsPressed(std::string&& name)
+{
+	return m_KeyCommands[std::move(name)]._keyPressed;
+}
+
+bool dae::InputManager::KeyDown(std::string&& name)
+{
+	return m_KeyCommands[std::move(name)]._keyDown;
+}
+
+bool dae::InputManager::KeyUp(std::string&& name)
+{
+	return m_KeyCommands[std::move(name)]._keyUp;
+}
+
+bool dae::InputManager::ProcessControllerInput()
+{
 	DWORD dwResult;
 	for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
 	{

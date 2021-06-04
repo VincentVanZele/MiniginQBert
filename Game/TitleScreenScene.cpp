@@ -174,7 +174,7 @@ void dae::TitleScreenScene::ButtonClicked(Button button)
 	switch (button)
 	{
 	case Button::ButtonSolo:
-		dae::Game::SwitchLevel1();
+		dae::Game::SwitchVersus();
 		break;
 	case Button::ButtonMultiplayer:
 		dae::Game::SwitchLevel3();

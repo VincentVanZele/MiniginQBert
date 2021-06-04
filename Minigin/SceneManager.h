@@ -22,6 +22,7 @@ namespace dae
 		void Destroy();
 
 		void AddScene(std::shared_ptr<Scene> scene);
+		void DeleteScene(const std::string& name);
 		std::shared_ptr<Scene> CreateScene(const std::string& name);
 		
 		void SetActiveScene(const std::string& sceneName);

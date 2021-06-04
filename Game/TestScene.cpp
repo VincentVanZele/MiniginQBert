@@ -92,7 +92,7 @@ void dae::TestScene::Initialize()
 	// Player
 	auto player = std::make_shared<GameObject>();
 
-	m_player = new Player(m_world->GetCubeAtIndex(4));
+	m_player = new Player(m_world->GetCubeAtIndex(4), Player1);
 	player->AddComponent(m_player);
 
 	m_player->AddObserver(new ScoreObserver());

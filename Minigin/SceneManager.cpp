@@ -45,6 +45,17 @@ void dae::SceneManager::SetActiveScene(const std::string& sceneName)
 		std::cout << "Invalid Scene : " << sceneName << '\n';
 }
 
+void dae::SceneManager::DeleteScene(const std::string& sceneName)
+{
+	for (int i{ 0 }; i < m_pScenes.size(); i++)
+	{
+		if(m_pScenes[i]->GetName() == sceneName)
+		{
+			m_pScenes.erase(m_pScenes.begin()+i);
+		}
+	}
+}
+
 void dae::SceneManager::SetActiveScene(std::shared_ptr<Scene> pScene)
 {
 	m_pActiveScene = pScene;
