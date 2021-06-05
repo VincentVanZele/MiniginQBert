@@ -13,7 +13,6 @@ enum class GameEvent
 {
 	Default,
 	Died,
-	Killed,
 	TileChanged
 };
 

@@ -13,15 +13,15 @@
 #include "Enums.h"
 
 dae::WorldGrid::WorldGrid(GridType type, int width, Float2 pos, std::shared_ptr<GameObject> go)
-	: m_width(width)
-	, m_gridPosition(pos)
+	: m_gridPosition(pos)
+	, m_width(width)
 {
 	m_pSubject = new Subject();
 
 	Float2 tempPos = m_gridPosition;
 	int leftChild{}, rightChild{};
 	int offset{ 1 }, endOfLine{ 1 }, counter{ 0 };
-
+	
 	// Rows
 	for (int i = m_width; i != 0; i--)
 	{

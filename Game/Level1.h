@@ -3,6 +3,7 @@
 
 namespace dae
 {
+	class Enemy;
 	class Eggs;
 	class ScoreObserver;
 	class TextComponent;
@@ -25,6 +26,7 @@ namespace dae
 		TextComponent* m_score{ nullptr };
 		WorldGrid* m_world{ nullptr };
 		Player* m_player{ nullptr };
+		Enemy* m_enemy{ nullptr };
 		Eggs* m_eggP{ nullptr }, * m_eggR{ nullptr };
 	};
 

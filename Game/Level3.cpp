@@ -18,6 +18,7 @@
 #include "WorldGrid.h"
 #include "WorldObserver.h"
 #include "Eggs.h"
+#include "Game.h"
 #include "GridTile.h"
 
 dae::Level3::Level3()
@@ -157,11 +158,17 @@ void dae::Level3::Initialize()
 
 void dae::Level3::Update()
 {
-	int yes = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
+	int tiles = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
+	int lives = m_player->GetSubject()->GetObserver<DieObserver>()->GetLives();
 
-	if (yes == m_numberTiles)
+	if (tiles == m_numberTiles || lives < 0)
 	{
-		// win condition met
+		if (m_doOnce)
+		{
+			// win/lose condition met
+			m_doOnce = false;
+			dae::Game::SwitchEndScreen();
+		}
 	}
 
 	Scene::Update();

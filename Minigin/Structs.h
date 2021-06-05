@@ -24,6 +24,15 @@ namespace dae
 	private:
 		float _x, _y;
 	};
+
+	enum Button
+	{
+		ButtonLevel1,
+		ButtonLevel2,
+		ButtonLevel3,
+		ButtonVersus,
+		ButtonBack
+	};
 	
 	// --------- FLOAT STRUCTS/CLASSES ---------
 	// F2

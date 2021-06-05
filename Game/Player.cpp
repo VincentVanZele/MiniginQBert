@@ -158,8 +158,7 @@ void dae::Player::Update()
 			}
 			else if(m_pCurrentTile->GetTileState() == TileState::DeathPlane)
 			{
-				// die
-				TeleportToTile(m_pSpawnTile);
+				Die();
 			}
 			
 			m_needMoveUpdate = false;
@@ -169,9 +168,16 @@ void dae::Player::Update()
 			{
 				m_pSubject->Notify(GameEvent::TileChanged);
 			}
-			m_pCurrentTile->SetHasEntity(true);
 			
 			ToggleMoveRestriction();
+		}
+	}
+
+	if (m_pCurrentTile->GetGridType() != GridType::Versus)
+	{
+		if (m_pCurrentTile->GetHasEntity())
+		{
+			Die();
 		}
 	}
 
@@ -196,6 +202,7 @@ void dae::Player::Render()
 void dae::Player::Die()
 {
 	TeleportToTile(m_pSpawnTile);
+	m_pSubject->Notify(GameEvent::Died);
 }
 
 void dae::Player::HandleKeyboardInput()
@@ -228,8 +235,6 @@ void dae::Player::MoveTo(TileConnections connection)
 		{
 			return;
 		}
-
-		m_pCurrentTile->SetHasEntity(false);
 		
 		m_pCurrentTile = targetTile;		
 		m_TargetPosition = targetTile->GetCenter();
@@ -297,7 +302,6 @@ void dae::Player::TeleportToTile(GridTile* tile)
 		return;
 
 	m_pCurrentTile = tile;
-	m_pCurrentTile->SetHasEntity(true);
 	// TP
 	m_pGameObject.lock()->GetTransform()->SetPosition(Float2{ m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y });
 }

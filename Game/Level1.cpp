@@ -18,6 +18,7 @@
 #include "WorldGrid.h"
 #include "WorldObserver.h"
 #include "Eggs.h"
+#include "Enemy.h"
 #include "Game.h"
 #include "GridTile.h"
 
@@ -89,6 +90,14 @@ void dae::Level1::Initialize()
 	Add(level);
 	Add(player);
 
+	// Player
+	auto enemy = std::make_shared<GameObject>();
+
+	m_enemy = new Enemy(m_world->GetCubeAtIndex(31));
+	enemy->AddComponent(m_enemy);
+
+	Add(enemy);
+
 	// Score Player 1
 	auto scoreGo = std::make_shared<GameObject>();
 
@@ -131,13 +140,14 @@ void dae::Level1::Initialize()
 
 void dae::Level1::Update()
 {
-	int yes = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
+	int tiles = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
+	int lives = m_player->GetSubject()->GetObserver<DieObserver>()->GetLives();
 
-	if (yes == m_numberTiles)
+	if (tiles == m_numberTiles || lives < 0)
 	{
 		if (m_doOnce)
 		{
-			// win condition met
+			// win/lose condition met
 			m_doOnce = false;
 			dae::Game::SwitchEndScreen();
 		}

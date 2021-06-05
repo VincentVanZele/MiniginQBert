@@ -1,19 +1,11 @@
 #pragma once
 #include <Structs.h>
-
 #include "Scene.h"
-#include "Structs.h"
+
 
 namespace dae
 {
 	class SpriteComponent;
-
-	enum Button
-	{
-		ButtonSolo,
-		ButtonMultiplayer,
-		ButtonExit
-	};
 
 	class TitleScreenScene final : public dae::Scene
 	{
@@ -28,9 +20,9 @@ namespace dae
 	private:
 		Button m_selectedButton;
 
-		Float2 m_soloPos{}, m_coopPos{}, m_exitPos{};
-		std::shared_ptr<GameObject> m_spSelection;
-		SpriteComponent* m_selectionComp;
+		Float2 m_lv1Pos{}, m_lv2Pos{}, m_lv3Pos{}, m_vsPos{};
+		std::shared_ptr<GameObject> m_spSelection, m_spSelection2;
+		SpriteComponent* m_selectionComp, *m_selectionComp2;
 	};
 
 }

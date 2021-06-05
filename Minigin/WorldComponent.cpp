@@ -25,16 +25,10 @@ void dae::WorldComponent::Initialize()
 
 void dae::WorldComponent::Update()
 {
-
-	if (m_hasKilled)
-	{
-		m_pSubject->Notify(GameEvent::Killed);
-		m_hasKilled = false;
-	}
-	if(m_hasChengedTile)
+	if(m_hasChangedTile)
 	{
 		m_pSubject->Notify(GameEvent::TileChanged);
-		m_hasChengedTile = false;
+		m_hasChangedTile = false;
 	}
 }
 

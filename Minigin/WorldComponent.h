@@ -25,11 +25,7 @@ namespace dae
 		void Update() override;
 		void Render() override;
 
-		// variables
-		// 
-		// temporary -> will be changed when world + enemies exist
-		bool m_hasKilled = false;
-		bool m_hasChengedTile = false;
+		bool m_hasChangedTile = false;
 	
 	private:
 

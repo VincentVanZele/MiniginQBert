@@ -27,7 +27,7 @@ namespace dae
 		WorldGrid& operator=(WorldGrid&& other) noexcept = delete;
 
 		int GetCubeIndex(GridTile* tile) const;
-		GridTile* GetCubeAtIndex(int index) const;
+		GridTile* GetCubeAtIndex(int idx) const;
 		GridTile* GetFrontCube() const;
 
 		void AddObserver(Observer* observer) const;
@@ -47,9 +47,10 @@ namespace dae
 		{
 			return m_pSubject;
 		}
+
+		
 		
 	private:
-		
 		std::vector<GridTile*> m_pGridTiles;
 		std::vector<GridTile*> m_pChangeableTiles;
 		Float2 m_gridPosition{};

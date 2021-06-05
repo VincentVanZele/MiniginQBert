@@ -13,7 +13,7 @@ namespace dae
 		Base, TwoJumps, Reset, Versus
 	};
 	
-	enum class TileState
+	enum TileState
 	{
 		Disk, Tile, Intermediate, ChangedTile, AltChangedTile, DeathPlane
 	};
@@ -109,6 +109,11 @@ namespace dae
 		bool GetHasEntity() const
 		{
 			return m_hasEntity;
+		}
+
+		GridType GetGridType() const
+		{
+			return m_gridType;
 		}
 		
 	private:

@@ -19,6 +19,7 @@ namespace dae
 
 	private:
 		int m_numberTiles{}, m_numberDisks{ 2 };
+		bool m_doOnce{ true };
 
 		ScoreObserver* m_obs{ nullptr };
 		TextComponent* m_score{ nullptr };

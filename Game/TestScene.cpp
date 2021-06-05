@@ -163,7 +163,7 @@ void dae::TestScene::Update()
 	if (yes == m_numberTiles)
 	{
 		// win condition met
-		dae::Game::SwitchScene();
+		dae::Game::SwitchEndScreen();
 	}
 
 	Scene::Update();

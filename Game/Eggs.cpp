@@ -104,23 +104,31 @@ void dae::Eggs::Update()
 			m_goLeft = !m_goLeft;
 			m_IsMoving = false;
 			m_pCurrentTile->SetHasEntity(true);
-			if (m_pCurrentTile->GetTileState() != TileState::DeathPlane)
+
+			m_waitTimer += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
+
+			if (m_waitTimer > 1)
 			{
-				if (m_goLeft)
+				m_waitTimer = 0;
+				if (m_pCurrentTile->GetTileState() != TileState::DeathPlane)
 				{
-					MoveTo(TileConnections::Left);
+					if (m_goLeft)
+					{
+						MoveTo(TileConnections::Left);
+					}
+					else
+					{
+						MoveTo(TileConnections::Down);
+					}
 				}
 				else
 				{
-					MoveTo(TileConnections::Down);
+					m_pGameObject.lock()->GetTransform()->SetPosition(m_SpawnPos);
+					m_pCurrentTile->SetHasEntity(false);
+					m_pCurrentTile = m_pBaseTile;
+					m_TargetPosition = m_pBaseTile->GetCenter();
 				}
-			}
-			else
-			{
-				m_pGameObject.lock()->GetTransform()->SetPosition(m_SpawnPos);
-				m_pCurrentTile = m_pBaseTile;
-				m_TargetPosition = m_pBaseTile->GetCenter();
-			}
+			}		
 		}
 	}
 

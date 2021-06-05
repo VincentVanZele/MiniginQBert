@@ -65,7 +65,7 @@ namespace dae
 
 		// Game
 		bool m_isDelayed{ false };
-		float m_elapsedTime;
+		float m_elapsedTime, m_waitTimer;
 		int m_delay{ 4 };
 	};
 }
