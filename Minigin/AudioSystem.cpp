@@ -67,13 +67,11 @@ void dae::DirectAudioSystem::AddAudio(const char* filename, int volume, bool isS
 
 void dae::DirectAudioSystem::PlayMusic(const char* filename, int volume)
 {
-	std::cout << "Played music\n";
 	playMusic(filename, volume);
 }
 
 void dae::DirectAudioSystem::PlaySound(const char* filename, int volume)
 {
-	std::cout << "Played sound\n";
 	playSound(filename, volume);
 }
 
