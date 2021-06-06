@@ -132,10 +132,18 @@ void dae::Level3::Initialize()
 
 void dae::Level3::Update()
 {
-	int tiles = m_player->GetSubject()->GetObserver<WorldObserver>()->GetFlippedTiles();
 	int lives = m_player->GetSubject()->GetObserver<DieObserver>()->GetLives();
 
-	if (tiles == m_numberTiles || lives < 0)
+	int tempResult{ 0 };
+	for (auto element : m_world->GetGridTiles())
+	{
+		if (element->GetTileState() == TileState::ChangedTile)
+		{
+			tempResult++;
+		}
+	}
+
+	if (tempResult == m_numberTiles || lives < 0)
 	{
 		if (m_doOnce)
 		{

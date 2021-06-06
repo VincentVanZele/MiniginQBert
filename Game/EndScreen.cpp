@@ -35,6 +35,38 @@ dae::EndScreen::EndScreen()
 	Initialize();
 }
 
+dae::EndScreen::EndScreen(int player)
+	: Scene("EndScreen")
+	, m_button{ ButtonBack }
+	, m_spSelection{ std::make_shared<GameObject>() }, m_spSelection2{ std::make_shared<GameObject>() }
+	, m_lv1Pos{ Float2{ 180.0f, 245.0f } }
+{
+	Initialize();
+
+	const auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+
+	auto textGo = std::make_shared<GameObject>();
+	std::string playerText(" ");
+
+	switch (player)
+	{
+	case 1:
+		playerText = "Player 1 Win";
+		textGo->GetTransform()->Translate(Float2{ 50,175 });
+		break;
+	case 2:
+		playerText = "Player 2 Win";
+		textGo->GetTransform()->Translate(Float2{ 450,175 });
+		break;
+	}
+
+	auto textComp = new TextComponent(font, playerText, Float3{ 255,0,0 });
+	textGo->AddComponent(textComp);
+	Add(textGo);
+
+}
+
+
 void dae::EndScreen::Initialize()
 {
 	// Background

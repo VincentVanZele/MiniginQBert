@@ -48,18 +48,22 @@ namespace dae
 			return m_pSubject;
 		}
 
-		
+		std::vector<GridTile*> GetGridTiles() const
+		{
+			return m_pGridTiles;
+		}
 		
 	private:
 		std::vector<GridTile*> m_pGridTiles;
 		std::vector<GridTile*> m_pChangeableTiles;
 		
-		Float2 m_gridPosition{};
+		Float2 m_gridPosition{}, m_tempPos{0,0};
 		
 		SpriteComponent* m_pSprite1 = nullptr;
 		SpriteComponent* m_pSprite2 = nullptr;
 
-		int m_width, m_disk1{21}, m_disk2{27}, m_diskOffset{15};
+		int m_size, m_disk1{21}, m_disk2{27}, m_diskOffset{15},
+		    m_offset{ 1 }, m_edge{ 1 }, m_counter{ 0 };
 		
 		Subject* m_pSubject = nullptr;
 	};

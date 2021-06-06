@@ -49,7 +49,7 @@ void dae::SceneManager::SetActiveScene(const std::string& sceneName)
 
 void dae::SceneManager::DeleteScene(const std::string& sceneName)
 {
-	for (int i{ 0 }; i < m_pScenes.size(); i++)
+	for (int i{ 0 }; i < (int)m_pScenes.size(); i++)
 	{
 		if(m_pScenes[i]->GetName() == sceneName)
 		{

@@ -19,7 +19,7 @@ namespace dae
 		Player* m_player{ nullptr };
 		Player* m_player2{ nullptr };
 
-		float m_elapsedTime, m_endTime{60};
+		float m_elapsedTime{ 0 }, m_endTime{ 60 };
 		bool m_doOnce{ true };
 	};
 

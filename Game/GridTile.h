@@ -73,9 +73,9 @@ namespace dae
 
 		bool ToggleState()
 		{
-			if (m_state == TileState::Tile)
+			if (m_state == Tile)
 			{
-				m_state = TileState::ChangedTile;
+				m_state = ChangedTile;
 				return true;
 			}
 			return false;
@@ -120,14 +120,13 @@ namespace dae
 		Float2 m_tileCenter{};
 
 		GridType m_gridType = GridType::Base;
-		TileState m_state = TileState::Tile;
-		TileState m_defaultState = TileState::Tile;
+		TileState m_state = Tile;
+		TileState m_defaultState = Tile;
 
 		std::array<GridTile*, 4> m_pAdjacentTiles{nullptr,nullptr ,nullptr ,nullptr };
 		
 		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged, m_pTextIntermediate, m_pAltTextChanged;
 
-		bool m_NeedUpdate = true;
 		bool m_hasEntity = false;
 		bool m_canChange = false;
 	};

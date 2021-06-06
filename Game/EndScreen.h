@@ -11,6 +11,7 @@ namespace dae
 	{
 	public:
 		EndScreen();
+		EndScreen(int player);
 
 		void Initialize() override;
 		void Update() override;

@@ -14,81 +14,87 @@
 
 dae::WorldGrid::WorldGrid(GridType type, int width, Float2 pos, std::shared_ptr<GameObject> go)
 	: m_gridPosition(pos)
-	, m_width(width)
+	, m_size(width)
 {
 	m_pSubject = new Subject();
 
-	Float2 tempPos = m_gridPosition;
-	int leftChild{}, rightChild{};
-	int offset{ 1 }, endOfLine{ 1 }, counter{ 0 };
-	
 	// Rows
-	for (int i = m_width; i != 0; i--)
+	for (int i = m_size; i != 0; i--)
 	{
 		// Reset tile position 
-		tempPos = m_gridPosition;
+		m_tempPos = m_gridPosition;
 
 		// Cols
 		for (int j = 0; j < i; j++)
 		{
 			auto newTile = std::make_shared<GameObject>();
-			newTile->AddComponent(new GridTile(type,tempPos));
+			newTile->AddComponent(new GridTile(type, m_tempPos));
 
 			m_pGridTiles.push_back(newTile->GetComponent<GridTile>());
 
-			// Edge cases
-			if (i == m_width)
-			{
-				m_pGridTiles.back()->SetTileState(TileState::DeathPlane);
-				m_pGridTiles.back()->SetDefaultTileState(TileState::DeathPlane);
-			}
-			if (j == 0 || j == i - 1)
+			// Outer Tiles
+			if (i == m_size || j == 0 || j == i - 1)
 			{
 				m_pGridTiles.back()->SetTileState(TileState::DeathPlane);
 				m_pGridTiles.back()->SetDefaultTileState(TileState::DeathPlane);
 			}
 			
 			go->AddChild(newTile);
-			tempPos._x += (float)newTile->GetComponent<GridTile>()->GetDefaultTexture()->GetTextWidth();
+			m_tempPos._x += (float)newTile->GetComponent<GridTile>()->GetDefaultTexture()->GetTextWidth();
 		}
 
-		// Adapt tile position
-		m_gridPosition._x += m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2;
-		m_gridPosition._y -= m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f;
+		// Adapt tile to correct position
+		m_gridPosition._x += (float)m_pGridTiles.back()->GetDefaultTexture()->GetTextWidth() / 2.f;
+		m_gridPosition._y -= (float)m_pGridTiles.back()->GetDefaultTexture()->GetTextHeight() * 0.75f;
 	}
+
+/*
+   idea discussed in public student feedback
+   for(i=size)
+	  for(j<i)
+   reverse
+ 
+	    First
+	     /=\
+	    /===\ 
+	   /=====\
+	  /=======\
+    Last
+*/
 	std::reverse(m_pGridTiles.begin(), m_pGridTiles.end());
 
 	// Adjacent tiles 
-	for (int i = 0; i < (int)m_pGridTiles.size(); i++)
+	for (int k = 0; k < (int)m_pGridTiles.size(); k++)
 	{
-		rightChild = i * 2 + offset;
-		leftChild = i * 2 + offset + 1;
-		counter++;
+		const int result = k * 2;
+		
+		const int vertical = result + m_offset;
+		const int horizontal = result + m_offset + 1;
+		
+		m_counter++;
 
-		if (counter != endOfLine)
+		if (m_counter != m_edge)
 		{
-			offset--;
+			m_offset--;
 		}
 		else
 		{
-			counter = 0;
-			endOfLine++;
-		}
-
-		// Vertical 
-		if (rightChild < m_pGridTiles.size())
-		{
-			m_pGridTiles[i]->AddTileConnections(m_pGridTiles[rightChild], TileConnections::Down);
-			m_pGridTiles[rightChild]->AddTileConnections(m_pGridTiles[i], TileConnections::Up);
+			m_counter = 0;
+			m_edge++;
 		}
 
 		// Horizontal
-		if (leftChild < m_pGridTiles.size())
+		if (horizontal < (int)m_pGridTiles.size())
 		{
-			m_pGridTiles[i]->AddTileConnections(m_pGridTiles[leftChild], TileConnections::Left);
-			m_pGridTiles[leftChild]->AddTileConnections(m_pGridTiles[i], TileConnections::Right);
+			m_pGridTiles[k]->AddTileConnections(m_pGridTiles[horizontal], TileConnections::Left);
+			m_pGridTiles[horizontal]->AddTileConnections(m_pGridTiles[k], TileConnections::Right);
 		}
-
+		// Vertical 
+		if (vertical < (int)m_pGridTiles.size())
+		{
+			m_pGridTiles[k]->AddTileConnections(m_pGridTiles[vertical], TileConnections::Down);
+			m_pGridTiles[vertical]->AddTileConnections(m_pGridTiles[k], TileConnections::Up);
+		}
 	}
 
 	// Disk 1
@@ -127,6 +133,21 @@ dae::WorldGrid::WorldGrid(GridType type, int width, Float2 pos, std::shared_ptr<
 	}
 }
 
+void dae::WorldGrid::Initialize()
+{
+
+}
+
+void dae::WorldGrid::Render()
+{
+
+}
+
+void dae::WorldGrid::Update()
+{
+
+}
+
 dae::WorldGrid::~WorldGrid()
 {
 	m_pSubject->DeleteAllObservers();
@@ -137,10 +158,7 @@ dae::WorldGrid::~WorldGrid()
 	}
 }
 
-void dae::WorldGrid::Initialize()
-{
-	
-}
+
 
 int dae::WorldGrid::GetCubeIndex(GridTile* tile) const
 {
@@ -172,14 +190,4 @@ void dae::WorldGrid::AddObserver(Observer* observer) const
 void dae::WorldGrid::RemoveObserver(Observer* observer) const
 {
 	m_pSubject->RemoveObserver(observer);
-}
-
-void dae::WorldGrid::Update()
-{	
-
-}
-
-void dae::WorldGrid::Render()
-{
-
 }

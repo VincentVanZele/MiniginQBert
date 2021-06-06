@@ -151,7 +151,35 @@ void dae::Versus::Update()
 			m_player->SetMoveRestriction(true);
 			m_player2->SetMoveRestriction(true);
 			m_doOnce = false;
-			dae::Game::SwitchEndScreen();
+
+			//calculate
+			int p1Result{ 0 }, p2Result{ 0 };
+			
+			for (auto element : m_world->GetGridTiles())
+			{
+				if(element->GetTileState() == TileState::ChangedTile)
+				{
+					p1Result++;
+				}
+				else if (element->GetTileState() == TileState::AltChangedTile)
+				{
+					p2Result++;
+				}
+			}
+			
+			if(p1Result>p2Result)
+			{
+				dae::Game::SwitchEndScreen(1);
+			}
+			else if (p2Result > p1Result)
+			{
+				dae::Game::SwitchEndScreen(2);
+			}
+			else
+			{
+				dae::Game::SwitchEndScreen();
+			}
+			
 		}
 		return;
 	}

@@ -1,5 +1,4 @@
 #pragma once
-#include "Minigin.h"
 
 namespace dae
 {
@@ -9,9 +8,10 @@ namespace dae
 	class Game
 	{
 	public:
-		void Run();
-		void LoadScenes();
-		void LoadAllScenes();
+		void Run() const;
+		void LoadScenes() const;
+
+		static void LoadAllScenes();
 		
 		static void SwitchTitle();
 
@@ -22,6 +22,7 @@ namespace dae
 		static void SwitchVersus();
 		
 		static void SwitchEndScreen();
+		static void SwitchEndScreen(int player);
 
 		static void Reset();
 	};
