@@ -53,7 +53,9 @@ namespace dae
 	private:
 		std::vector<GridTile*> m_pGridTiles;
 		std::vector<GridTile*> m_pChangeableTiles;
+		
 		Float2 m_gridPosition{};
+		
 		SpriteComponent* m_pSprite1 = nullptr;
 		SpriteComponent* m_pSprite2 = nullptr;
 

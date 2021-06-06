@@ -109,6 +109,7 @@ namespace dae
 		bool m_needDirection{ true };
 
 		const float m_WalkSpeed = 20.0f;
+		float m_waitTimer{0};
 		Float2 m_CurrentPosition, m_TargetPosition;
 		bool m_IsMoving{ false };
 

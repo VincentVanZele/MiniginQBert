@@ -123,7 +123,7 @@ namespace dae
 		TileState m_state = TileState::Tile;
 		TileState m_defaultState = TileState::Tile;
 
-		std::array<GridTile*, 4> m_pAdjacentTiles;
+		std::array<GridTile*, 4> m_pAdjacentTiles{nullptr,nullptr ,nullptr ,nullptr };
 		
 		std::shared_ptr<Texture2D> m_pTextDefault, m_pTextChanged, m_pTextIntermediate, m_pAltTextChanged;
 

@@ -148,10 +148,11 @@ void dae::Level1::Update()
 		if (m_doOnce)
 		{
 			// win/lose condition met
+			m_player->SetMoveRestriction(true);
 			m_doOnce = false;
-			dae::Game::SwitchEndScreen();
+			dae::Game::SwitchEndScreen();			
 		}
+		return;
 	}
-
 	Scene::Update();
 }

@@ -20,7 +20,7 @@ namespace dae
 
 	private:
 		int m_numberTiles{}, m_numberDisks{ 2 };
-		bool m_doOnce{ true };
+		bool m_doOnce{ true }, m_pause{false};
 
 		ScoreObserver* m_obs{ nullptr };
 		TextComponent* m_score{ nullptr };

@@ -144,6 +144,8 @@ void dae::Game::SwitchVersus()
 
 void dae::Game::SwitchEndScreen()
 {
+	SceneManager::GetInstance().DeleteAllScenes();
+	
 	if (!SceneManager::GetInstance().GetScene("EndScreen"))
 	{
 		std::shared_ptr<Scene> scene = std::make_shared<EndScreen>();
@@ -159,8 +161,6 @@ void dae::Game::SwitchEndScreen()
 
 void dae::Game::Reset()
 {	
-	SceneManager::GetInstance().DeleteAllScenes();
-
 	std::shared_ptr<Scene> scene = std::make_shared<TitleScreenScene>();
 
 	SceneManager::GetInstance().AddScene(scene);

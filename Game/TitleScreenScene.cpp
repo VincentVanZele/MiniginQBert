@@ -8,6 +8,7 @@
 #include "ResourceManager.h"
 #include "FPSCounter.h"
 
+#include "AudioSystem.h"
 #include "InputManager.h"
 #include "FPSComponent.h"
 #include "LivesComponent.h"
@@ -56,6 +57,16 @@ void dae::TitleScreenScene::Initialize()
 	gob->AddComponent(texComp);
 	Add(gob);
 	gob->GetTransform()->Translate(Float2{ 200, 80 });
+
+	// text
+	const auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+
+	auto textGo = std::make_shared<GameObject>();
+	auto textComp = new TextComponent(font,"Y (or Controller Y) = Up / H (or Controller A) = Down / Space = Select",Float3{255,0,0});
+	textGo->AddComponent(textComp);
+	Add(textGo);
+
+	textGo->GetTransform()->Translate(Float2{ 10,175 });
 
 	// Controls P2
 	// A
@@ -252,6 +263,10 @@ void dae::TitleScreenScene::Initialize()
 	m_spSelection2->AddComponent(m_selectionComp2);
 	
 	Add(m_spSelection2);
+
+	InputManager::GetInstance().AddInput("space", ' ');
+	InputManager::GetInstance().AddInput("Select_Up", 'y');
+	InputManager::GetInstance().AddInput("Select_Down", 'h');
 }
 
 void dae::TitleScreenScene::Update()
@@ -260,7 +275,7 @@ void dae::TitleScreenScene::Update()
 	m_selectionComp->GetActiveAnimation().SetPos(m_spSelection->GetTransform()->GetPosition());
 	m_selectionComp2->GetActiveAnimation().SetPos(m_spSelection2->GetTransform()->GetPosition());
 	
-	if (InputManager::GetInstance().KeyUp(ControllerButton::YVK,0))
+	if (InputManager::GetInstance().KeyUp(ControllerButton::YVK,0) || InputManager::GetInstance().KeyUp("Select_Up"))
 	{
 		switch (m_selectedButton)
 		{
@@ -287,8 +302,10 @@ void dae::TitleScreenScene::Update()
 		default:
 			break;
 		}
+
+		ServiceLocator::GetAudioSystem().AddAudio("Sound/die.WAV", 1, true);
 	}
-	if (InputManager::GetInstance().KeyUp(ControllerButton::AVK, 0))
+	if (InputManager::GetInstance().KeyUp(ControllerButton::AVK, 0) || InputManager::GetInstance().KeyUp("Select_Down"))
 	{
 		switch (m_selectedButton)
 		{
@@ -315,8 +332,10 @@ void dae::TitleScreenScene::Update()
 		default:
 			break;
 		}
+
+		ServiceLocator::GetAudioSystem().AddAudio("Sound/die.WAV", 1, true);
 	}
-	if (InputManager::GetInstance().KeyUp(ControllerButton::BVK, 0))
+	if (InputManager::GetInstance().KeyUp("space"))
 	{
 		switch (m_selectedButton)
 		{
@@ -335,6 +354,8 @@ void dae::TitleScreenScene::Update()
 		default:
 			break;
 		}
+		
+		ServiceLocator::GetAudioSystem().AddAudio("Sound/warp.WAV", 1, true);
 	}
 	
 	Scene::Update();

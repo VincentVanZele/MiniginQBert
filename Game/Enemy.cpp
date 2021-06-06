@@ -64,25 +64,31 @@ void dae::Enemy::Update()
 {
 	if(m_needDirection)
 	{
-		const int rando = rand() % 4;
-		switch(rando)
+		m_waitTimer += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
+
+		if (m_waitTimer > 1)
 		{
-		case 0:
-			MoveTo(TileConnections::Up);
-			m_needDirection = false;
-			break;
-		case 1:
-			MoveTo(TileConnections::Down);
-			m_needDirection = false;
-			break;
-		case 2:
-			MoveTo(TileConnections::Left);
-			m_needDirection = false;
-			break;
-		case 3:
-			MoveTo(TileConnections::Right);
-			m_needDirection = false;
-			break;
+			const int rando = rand() % 4;
+			switch (rando)
+			{
+			case 0:
+				MoveTo(TileConnections::Up);
+				m_needDirection = false;
+				break;
+			case 1:
+				MoveTo(TileConnections::Down);
+				m_needDirection = false;
+				break;
+			case 2:
+				MoveTo(TileConnections::Left);
+				m_needDirection = false;
+				break;
+			case 3:
+				MoveTo(TileConnections::Right);
+				m_needDirection = false;
+				break;
+			}
+			m_waitTimer = 0;
 		}
 	}
 	
@@ -115,6 +121,7 @@ void dae::Enemy::Update()
 			m_IsMoving = false;
 			m_pCurrentTile->SetHasEntity(true);
 
+			
 			ToggleMoveRestriction();
 			m_needDirection = true;
 		}

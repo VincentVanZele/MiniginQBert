@@ -51,19 +51,6 @@ void dae::Level3::Initialize()
 
 	Add(go);
 
-	// Player Text
-	go = std::make_shared<GameObject>();
-	m_pSprite = new SpriteComponent();
-	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("P2_Text.png");
-	sequence = std::make_shared<Animation>(tex, "P2T", 2);
-	m_pSprite->AddAnimation(sequence);
-	m_pSprite->SetActiveAnimation("P2T");
-	m_pSprite->GetActiveAnimation().SetPos(Float2{ 540,10 });
-
-	go->AddComponent(m_pSprite);
-
-	Add(go);
-
 	// FPS
 	const auto font3 = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
@@ -127,19 +114,6 @@ void dae::Level3::Initialize()
 	livesGo->GetTransform()->Translate(Float2{ 25, 50 });
 	Add(livesGo);
 
-	// Score Player 2
-	scoreGo = std::make_shared<GameObject>();
-
-	textComp = new TextComponent(font3);
-	textComp->SetColor(Float3{ 220,70,255 });
-	scoreGo->AddComponent(textComp);
-	scoreComp = new ScoreComponent(new ScoreObserver());
-
-	scoreGo->AddComponent(scoreComp);
-
-	scoreGo->GetTransform()->Translate(Float2{ 475, 75 });
-
-	Add(scoreGo);
 
 	// Egg purple
 	auto eggPurple = std::make_shared<GameObject>();
@@ -166,9 +140,11 @@ void dae::Level3::Update()
 		if (m_doOnce)
 		{
 			// win/lose condition met
+			m_player->SetMoveRestriction(true);
 			m_doOnce = false;
 			dae::Game::SwitchEndScreen();
 		}
+		return;
 	}
 
 	Scene::Update();

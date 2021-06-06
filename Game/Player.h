@@ -101,6 +101,10 @@ namespace dae
 		{
 			return m_moveRestriction;
 		}
+		void SetMoveRestriction(bool stop)
+		{
+			m_moveRestriction = stop;
+		}
 
 		Subject* GetSubject() const
 		{
@@ -141,6 +145,5 @@ namespace dae
 		int m_lives = 10;
 		int m_score = 0;
 		PlayerIdx m_player{ PlayerIdx::Player1 };
-
 	};
 }

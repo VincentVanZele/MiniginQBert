@@ -12,6 +12,7 @@
 #include "ScoreObserver.h"
 #include "Subject.h"
 #include "TransformComponent.h"
+#include "AudioSystem.h"
 
 dae::Player::Player(GridTile* spawn, PlayerIdx idx)
 	: m_pTexture(nullptr)
@@ -25,6 +26,7 @@ dae::Player::Player(GridTile* spawn, PlayerIdx idx)
 
 dae::Player::~Player()
 {
+	
 	delete m_pActivState;
 	m_pActivState = nullptr;
 	m_pSprite = nullptr;
@@ -154,41 +156,46 @@ void dae::Player::Update()
 		{
 			if(m_pCurrentTile->GetTileState() == TileState::Disk)
 			{
+				ServiceLocator::GetAudioSystem().AddAudio("Sound/warp.WAV", 1, true);
 				TeleportToTile(m_pSpawnTile);
 			}
 			else if(m_pCurrentTile->GetTileState() == TileState::DeathPlane)
 			{
 				Die();
 			}
+			else if(m_pCurrentTile->GetHasEntity())
+			{
+				Die();
+			}
+			else
+			{
+				if (m_pCurrentTile->JumpedOn(m_player))
+				{
+					m_pSubject->Notify(GameEvent::TileChanged);
+				}
+				ServiceLocator::GetAudioSystem().AddAudio("Sound/jump.wav", 1, true);
+			}
 			
 			m_needMoveUpdate = false;
 			m_IsMoving = false;
-			
-			if(m_pCurrentTile->JumpedOn(m_player))
-			{
-				m_pSubject->Notify(GameEvent::TileChanged);
-			}
-			
+		
 			ToggleMoveRestriction();
 		}
 	}
 
-	if (m_pCurrentTile->GetGridType() != GridType::Versus)
+	if(m_pCurrentTile->GetHasEntity() == true && m_IsMoving == false)
 	{
-		if (m_pCurrentTile->GetHasEntity())
-		{
-			Die();
-		}
+		Die();
 	}
 
 	const Float2 animationPos = Float2
 	{ this->GetTransform()->GetPosition()._x + (float)(m_pSprite->GetActiveAnimation().GetTexture().GetTextWidth() / 2.f),
 		this->GetTransform()->GetPosition()._y - (float)(m_pSprite->GetActiveAnimation().GetTexture().GetTextHeight() / 2.f)
 	};
-	
+
 	m_pSprite->GetActiveAnimation().SetPos(animationPos);
 
-	if(m_player==PlayerIdx::Player2)
+	if (m_player == PlayerIdx::Player2)
 	{
 		HandleKeyboardInput();
 	}
@@ -203,6 +210,7 @@ void dae::Player::Die()
 {
 	TeleportToTile(m_pSpawnTile);
 	m_pSubject->Notify(GameEvent::Died);
+	ServiceLocator::GetAudioSystem().AddAudio("Sound/die.WAV", 1, true);
 }
 
 void dae::Player::HandleKeyboardInput()
@@ -302,8 +310,10 @@ void dae::Player::TeleportToTile(GridTile* tile)
 		return;
 
 	m_pCurrentTile = tile;
+	m_TargetPosition = m_pCurrentTile->GetCenter();
 	// TP
-	m_pGameObject.lock()->GetTransform()->SetPosition(Float2{ m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y });
+	this->GetTransform()->SetPosition(Float2{ m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y });
+	m_pSprite->GetActiveAnimation().SetPos(Float2{ m_pCurrentTile->GetCenter()._x, m_pCurrentTile->GetCenter()._y });
 }
 
 void dae::Player::AddObserver(Observer* observer) const 

@@ -72,36 +72,19 @@ void dae::EndScreen::Initialize()
 	list->SetNotifyFunction([this]() {this->ButtonClicked(Button::ButtonBack); });
 	buttonComp->m_spClick->AddListener(list);
 
-	
-	// Player Text
-	go = std::make_shared<GameObject>();
-	auto m_pSprite = new SpriteComponent();
-	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("P1_Text.png");
-	auto sequence = std::make_shared<Animation>(tex, "P1T", 2);
-	m_pSprite->AddAnimation(sequence);
-	m_pSprite->SetActiveAnimation("P1T");
-	m_pSprite->GetActiveAnimation().SetPos(Float2{ 100,10 });
+	// text
+	const auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
-	go->AddComponent(m_pSprite);
+	auto textGo = std::make_shared<GameObject>();
+	auto textComp = new TextComponent(font, "Space = Select", Float3{ 255,0,0 });
+	textGo->AddComponent(textComp);
+	Add(textGo);
 
-	Add(go);
-
-	// Player Text 2
-	go = std::make_shared<GameObject>();
-	m_pSprite = new SpriteComponent();
-	tex = ServiceLocator::GetResourceManager()->GetInstance().LoadTexture("P2_Text.png");
-	sequence = std::make_shared<Animation>(tex, "P2T", 2);
-	m_pSprite->AddAnimation(sequence);
-	m_pSprite->SetActiveAnimation("P2T");
-	m_pSprite->GetActiveAnimation().SetPos(Float2{ 540,10 });
-
-	go->AddComponent(m_pSprite);
-
-	Add(go);
+	textGo->GetTransform()->Translate(Float2{ 250,175 });
 
 	// Selection
 	auto tex3 = resourceManager->GetInstance().LoadTexture("Right.png");
-	sequence = std::make_shared<Animation>(tex3, "right", 2);
+	auto sequence = std::make_shared<Animation>(tex3, "right", 2);
 	m_selectionComp = new SpriteComponent();
 
 	m_spSelection->GetTransform()->Translate(m_lv1Pos);
@@ -127,6 +110,8 @@ void dae::EndScreen::Initialize()
 	m_spSelection2->AddComponent(m_selectionComp2);
 
 	Add(m_spSelection2);
+
+	InputManager::GetInstance().AddInput("space", ' ');
 }
 
 void dae::EndScreen::Update()
@@ -135,7 +120,7 @@ void dae::EndScreen::Update()
 	m_selectionComp->GetActiveAnimation().SetPos(m_spSelection->GetTransform()->GetPosition());
 	m_selectionComp2->GetActiveAnimation().SetPos(m_spSelection2->GetTransform()->GetPosition());
 
-	if (InputManager::GetInstance().KeyUp(ControllerButton::BVK, 0))
+	if (InputManager::GetInstance().KeyUp("space"))
 	{
 		switch (m_button)
 		{

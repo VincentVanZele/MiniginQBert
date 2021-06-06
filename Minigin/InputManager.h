@@ -63,6 +63,12 @@ namespace dae
 
 		void SetRumble(int controllerId) const;
 
+		void DeleteCommands()
+		{
+			m_mapCommands.clear();
+			m_KeyCommands.clear();
+		}
+
 	private:
 
 		Float2 m_mousePos;

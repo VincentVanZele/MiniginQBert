@@ -1,5 +1,7 @@
 #include "MiniginPCH.h"
 #include "SceneManager.h"
+
+#include "InputManager.h"
 #include "Scene.h"
 
 dae::SceneManager::SceneManager()
@@ -59,6 +61,7 @@ void dae::SceneManager::DeleteScene(const std::string& sceneName)
 void dae::SceneManager::DeleteAllScenes()
 {
 	m_pScenes.clear();
+	InputManager::GetInstance().DeleteCommands();
 }
 
 void dae::SceneManager::SetActiveScene(std::shared_ptr<Scene> pScene)

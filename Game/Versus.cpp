@@ -20,6 +20,7 @@
 #include "Eggs.h"
 #include "Game.h"
 #include "GridTile.h"
+#include "GameTime.h"
 
 dae::Versus::Versus()
 	:Scene("Versus")
@@ -105,6 +106,32 @@ void dae::Versus::Initialize()
 	m_player2->AddObserver(new DieObserver());
 	m_player2->AddObserver(new WorldObserver());
 
+	// Lives 1 
+	auto livesGo = std::make_shared<GameObject>();
+
+	textComp = new TextComponent(font3);
+	textComp->SetColor(Float3{ 255,119,0 });
+	livesGo->AddComponent(textComp);
+
+	auto livesComp = new LivesComponent(m_player->GetSubject()->GetObserver<DieObserver>());
+
+	livesGo->AddComponent(livesComp);
+	livesGo->GetTransform()->Translate(Float2{ 25, 50 });
+	Add(livesGo);
+
+	// Lives 2
+	livesGo = std::make_shared<GameObject>();
+
+	textComp = new TextComponent(font3);
+	textComp->SetColor(Float3{ 255,119,0 });
+	livesGo->AddComponent(textComp);
+
+	livesComp = new LivesComponent(m_player2->GetSubject()->GetObserver<DieObserver>());
+
+	livesGo->AddComponent(livesComp);
+	livesGo->GetTransform()->Translate(Float2{ 475, 50 });
+	Add(livesGo);
+
 	Add(level);
 	Add(player);
 	Add(player2);
@@ -112,6 +139,21 @@ void dae::Versus::Initialize()
 
 void dae::Versus::Update()
 {
+	m_elapsedTime += ServiceLocator::GetGameTime()->GetInstance().GetDeltaTime();
+	int lives = m_player->GetSubject()->GetObserver<DieObserver>()->GetLives();
+	int lives2 = m_player2->GetSubject()->GetObserver<DieObserver>()->GetLives();
 
+	if ((m_elapsedTime > m_endTime) || lives < 0 || lives2 < 0)
+	{
+		if (m_doOnce)
+		{
+			// win/lose condition met
+			m_player->SetMoveRestriction(true);
+			m_player2->SetMoveRestriction(true);
+			m_doOnce = false;
+			dae::Game::SwitchEndScreen();
+		}
+		return;
+	}
 	Scene::Update();
 }

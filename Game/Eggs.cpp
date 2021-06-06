@@ -14,6 +14,7 @@
 #include "ScoreObserver.h"
 #include "Subject.h"
 #include "TransformComponent.h"
+#include "AudioSystem.h"
 
 dae::Eggs::Eggs(GridTile* base, EggType type, Float2 spawn, bool delayed)
 	: m_pBaseTile(base)
@@ -109,6 +110,7 @@ void dae::Eggs::Update()
 
 			if (m_waitTimer > 1)
 			{
+				ServiceLocator::GetAudioSystem().AddAudio("Sound/blob.WAV", 1, true);
 				m_waitTimer = 0;
 				if (m_pCurrentTile->GetTileState() != TileState::DeathPlane)
 				{
